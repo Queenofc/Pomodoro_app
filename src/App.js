@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import PomodoroTimer from "./components/PomodoroTimer";
 import MusicPlayer from "./components/MusicPlayer";
 
-function App() {
+const App = () => {
+  const [stopMusicTrigger, setStopMusicTrigger] = useState(false);
+
   return (
-    <div className="container">
-      <h1>Pomodoro Timer</h1>
-      <PomodoroTimer />
-      <MusicPlayer />
+    <div>
+      <PomodoroTimer setStopMusicTrigger={setStopMusicTrigger} />
+      <MusicPlayer stopMusicTrigger={stopMusicTrigger} />
     </div>
   );
-}
+};
 
 export default App;
