@@ -1,22 +1,278 @@
+/* 🌟 General Styles */
+:root {
+  --trail-color: #ffd700; /* Default Golden Glow */
+  max-width: 100vw;
+  min-height: 100vh;
+}
+
+body {
+  align-items: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 🌙 Dark Mode */
+.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* 🌟 Container Styling */
+.container {
+  max-width: 100vw;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 🌙 Dark Mode Container */
+.dark-mode .container {
+  color: #ffffff;
+}
+
+/* 🎛️ Theme Toggle */
+.theme-toggle {
+  position: absolute;
+  top: 50px;
+  right: 10px;
+  width: 40px; /* Fixed width */
+  height: 40px; /* Fixed height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px; /* Adds space around */
+  border-radius: 50%; /* Optional: makes it round */
+  overflow: hidden; /* Prevents image from overflowing */
+}
+
+.theme-toggle img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Ensures it fits without distortion */
+}
+
+
+/* 🎵 Music Player Container */
 .music-container {
-    text-align: center;
-    padding: 20px;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    width: 300px;
-    margin: auto;
-    background-color: #f8f8f8;
+  text-align: center;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  width: 300px;
+  margin: auto;
+  background-color:#DE3163;
+  transition: background-color 0.3s ease;
+}
+
+/* 🌙 Dark Mode Music Container */
+.dark-mode .music-container {
+  background-color:#DE3163;
+}
+
+/* 🎼 Music Image */
+.music-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  margin: 10px 0;
+}
+
+/* 🎶 Music Info */
+.music-info h3 {
+  margin: 5px 0;
+  font-size: 18px;
+}
+
+/* 🎧 Select Dropdown */
+select {
+  padding: 8px;
+  margin: 10px;
+  border-radius: 5px;
+  background: white;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* 🌙 Dark Mode Select */
+.dark-mode select {
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+}
+
+/* ⏳ Timer Display */
+h2 {
+  font-size: 24px;
+}
+
+/* ⏰ Custom Time Input */
+.custom-time input {
+  width: 50px;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+
+/* 🌙 Dark Mode Input */
+.dark-mode .custom-time input {
+  background: #222;
+  color: white;
+  border: 1px solid #444;
+}
+
+/* 🎛️ Controls */
+.controls {
+  margin-top: 20px;
+}
+
+/* 🎛️ Buttons */
+button {
+  background-color: #f4d03f;
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 25px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* 🔄 Button Hover */
+button:hover {
+  background-color: #f7dc6f 
+}
+
+/* 🌙 Dark Mode Buttons */
+.dark-mode button {
+  background-color: #444;
+  color: #fff;
+}
+
+.dark-mode button:hover {
+  background-color: #666;
+}
+
+/* 🎨 Mood-Based Cursor Trail */
+.trail {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 30%, var(--trail-color) 80%);
+  box-shadow: 
+    0 0 15px rgba(255, 255, 255, 0.8), 
+    0 0 30px var(--trail-color), 
+    0 0 50px var(--trail-color), 
+    0 0 70px rgba(182, 173, 173, 0.3);
+  filter: blur(3px); /* Fluid glow effect */
+  transform: translate(-50%, -50%);
+  opacity: 0.9;
+  animation: neonFade 1s ease-out forwards;
+}
+
+/* 🌊 Smooth Neon Trail Animation */
+@keyframes neonFade {
+  0% {
+    opacity: 1;
+    filter: blur(4px) brightness(1.5);
+    transform: scale(1);
   }
-  
+  50% {
+    opacity: 0.8;
+    filter: blur(8px) brightness(1.2);
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(12px) brightness(1);
+    transform: scale(1.3);
+  }
+}
+
+/* 📱 Mobile-Friendly Layout */
+@media (max-width: 768px) {
+  .container {
+    max-width: 90%;
+    padding: 15px;
+  }
+
+  .theme-toggle {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+  }
+
+  .music-container {
+    width: 90%;
+    padding: 15px;
+  }
+
   .music-image {
-    width: 150px;
-    height: 150px;
-    border-radius: 10px;
-    margin: 10px 0;
+    width: 120px;
+    height: 120px;
   }
-  
-  .music-info h3 {
-    margin: 5px 0;
+
+  select {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  button {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .custom-time input {
+    width: 40px;
+    padding: 4px;
+  }
+}
+
+/* 📱 Extra Small Screens */
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+
+  .music-container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .music-image {
+    width: 100px;
+    height: 100px;
+  }
+
+  select {
+    font-size: 12px;
+    padding: 5px;
+  }
+
+  button {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  h2 {
     font-size: 18px;
   }
-  
+
+  .custom-time input {
+    width: 35px;
+    padding: 3px;
+  }
+}
