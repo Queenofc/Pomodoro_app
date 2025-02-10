@@ -104,7 +104,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   return (
     <div className={`container ${isDarkMode ? "dark" : "light"}`}>
       <button className="theme-toggle" onClick={toggleTheme}>
-        <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon" width="30" height="30" />
+        <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon"  />
       </button>
       <h2>
         Timer: {Math.floor(time / 3600)}:{String(Math.floor((time % 3600) / 60)).padStart(2, "0")}:
