@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./music.css";
 import sunIcon from "../images/sun.png"; // Light mode icon
 import moonIcon from "../images/moon.png"; // Dark mode icon
+import logo from "../images/logo.png"; 
 
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const [time, setTime] = useState(0);
@@ -125,8 +126,12 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       <button className="theme-toggle" onClick={toggleTheme}>
         <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon" />
       </button>
+      <div className="title">
+        <img src={logo}alt=""/>
+        <h1>Chill With Pomodoro</h1>
+      </div>
       <h2>
-        Timer: {Math.floor(time / 3600)}:
+        {Math.floor(time / 3600)}:
         {String(Math.floor((time % 3600) / 60)).padStart(2, "0")}:
         {String(time % 60).padStart(2, "0")}
       </h2>

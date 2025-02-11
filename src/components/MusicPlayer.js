@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "./music.css";
 
 const moodData = {
-  work: { title: "Focus Beats", url: "/audio/work.mp3", color: "#40E0D0" },
+  work: { title: "Focus Beats", url: "/audio/working.mp3", color: "#40E0D0" },
   meditation: { title: "Calm Waves", url: "/audio/meditation.mp3", color: "#4CAF50" },
   cooking: { title: "Kitchen Vibes", url: "/audio/cooking.mp3", color: "#ffcc00" },
   exercise: { title: "Energy Boost", url: "/audio/exercise.mp3", color: "#DFFF00" },
@@ -74,7 +74,7 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
       {mood !== "none" && (
         <div className="music-box">
           <h3>{moodData[mood].title}</h3>
-          <button onClick={() => setIsPlaying(!isPlaying)}>
+          <button className="play-btn" onClick={() => setIsPlaying(!isPlaying)}>
             {isPlaying ? "Pause" : "Play"}
           </button>
         </div>
