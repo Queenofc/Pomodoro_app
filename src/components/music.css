@@ -6,6 +6,7 @@
 }
 
 body {
+  font-family: 'Nunito', sans-serif;
   align-items: center;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
@@ -68,13 +69,13 @@ body {
   border-radius: 10px;
   width: 500px;
   margin: auto;
-  background-color: #de3163;
+  background-color: #FF8C00;
   transition: background-color 0.3s ease;
 }
 
 /* 🌙 Dark Mode Music Container */
 .dark-mode .music-container {
-  background-color: #de3163;
+  background-color: #FF8C00;
 }
 
 /* 🎼 Music Image */
@@ -140,8 +141,9 @@ h2 {
 
 /* 🎛️ Buttons */
 button {
-  background-color: #f4d03f;
-  color: white;
+  background-color: transparent;
+  color: #FF8C00;
+  font-weight: bold;
   border: none;
   padding: 15px 20px;
   margin: 5px;
@@ -149,22 +151,23 @@ button {
   border-radius: 25px;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  box-shadow: 1px 3px 50px rgba(0, 0, 0, 0.1);
 }
 
 /* 🔄 Button Hover */
 button:hover {
-  background-color: #f7dc6f;
+  color:	#FF4500;
 }
 
 /* 🌙 Dark Mode Buttons */
 .dark-mode button {
-  background-color: #444;
-  color: #fff;
-  padding: 14px;
+  background-color:transparent;
+  color: #FF8C00;
+  padding: 15px 20px;
 }
 
 .dark-mode button:hover {
-  background-color: #666;
+  color:	#FF4500;
 }
 
 /* 🎨 Mood-Based Cursor Trail */
@@ -206,93 +209,3 @@ button:hover {
   }
 }
 
-/* 📱 Mobile-Friendly Layout */
-@media (max-width: 768px) {
-  .container {
-    max-width: 90%;
-    padding: 15px;
-  }
-
-  .theme-toggle {
-    position: absolute;
-    top: 60px;
-    right: 20px;
-  }
-
-  .theme-toggle img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Ensures it fits without distortion */
-  }
-
-  .music-container {
-    width: 90%;
-    padding: 15px;
-  }
-
-  .music-image {
-    width: 120px;
-    height: 120px;
-  }
-
-  select {
-    font-size: 14px;
-    padding: 6px;
-  }
-
-  button {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  .custom-time input {
-    width: 40px;
-    padding: 4px;
-  }
-}
-
-/* 📱 Extra Small Screens */
-@media (max-width: 480px) {
-  .container {
-    padding: 10px;
-  }
-
-  .theme-toggle img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Ensures it fits without distortion */
-  }
-
-  .music-container {
-    width: 90%;
-    padding: 10px;
-  }
-
-  .music-image {
-    width: 100px;
-    height: 100px;
-  }
-
-  select {
-    font-size: 12px;
-    padding: 5px;
-  }
-
-  button {
-    padding: 10px;
-    font-size: 12px;
-  }
-
-  h2 {
-    font-size: 18px;
-  }
-
-  .custom-time input {
-    width: 35px;
-    padding: 3px;
-  }
-}

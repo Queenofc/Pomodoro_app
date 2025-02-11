@@ -1,16 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
-import './music.css';
+import "./music.css";
 import sunIcon from "../images/sun.png"; // Light mode icon
 import moonIcon from "../images/moon.png"; // Dark mode icon
 
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
-  const [time, setTime] = useState(25 * 60);
+  const [time, setTime] = useState(0);
   const [isActive, setIsActive] = useState(false);
-  const [customTime, setCustomTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
-  const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
-  const [initialTime, setInitialTime] = useState(25 * 60);
+  const [customTime, setCustomTime] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("darkMode") === "true"
+  );
 
-  const alarmSound = useRef(new Audio("https://www.fesliyanstudios.com/play-mp3/4387"));
+  const alarmSound = useRef(
+    new Audio("https://www.fesliyanstudios.com/play-mp3/4387")
+  );
 
   useEffect(() => {
     let timer;
@@ -31,25 +38,26 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       clearInterval(timer);
     }
     return () => clearInterval(timer);
-  }, [isActive, time,setStopMusicTrigger]);
+  }, [isActive, time, setStopMusicTrigger]);
 
   useEffect(() => {
-    const savedTime = localStorage.getItem("remainingTime");
-    if (savedTime) {
-      setTime(parseInt(savedTime, 10));
-    }
+    // Reset timer to 0 on refresh
+    localStorage.setItem("remainingTime", 0);
+    setTime(0);
   }, []);
 
   const startTimer = () => {
-    setIsActive(true);
-    setStopMusicTrigger(false);
+    if (time > 0) {
+      setIsActive(true);
+      setStopMusicTrigger(false);
+    }
   };
 
   const pauseTimer = () => setIsActive(false);
 
   const stopTimer = () => {
     setIsActive(false);
-    setTime(initialTime);
+    setTime(0);
     setStopMusicTrigger(true);
     alarmSound.current.pause();
     alarmSound.current.currentTime = 0;
@@ -58,7 +66,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
 
   const resetTimer = () => {
     setIsActive(false);
-    setTime(initialTime);
+    setTime(0);
     setStopMusicTrigger(true);
     alarmSound.current.pause();
     alarmSound.current.currentTime = 0;
@@ -67,28 +75,39 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
 
   const handlePresetChange = (event) => {
     const presetTimes = {
-      "60": 60,
-      "300": 5 * 60,
-      "1500": 25 * 60,
-      "2700": 45 * 60,
+      60: 60,
+      300: 5 * 60,
+      1500: 25 * 60,
+      2700: 45 * 60,
     };
     const newTime = presetTimes[event.target.value] || 0;
     setTime(newTime);
-    setInitialTime(newTime);
-    setCustomTime({ hours: Math.floor(newTime / 3600), minutes: Math.floor((newTime % 3600) / 60), seconds: newTime % 60 });
   };
 
   const handleCustomTimeChange = (event) => {
     const { name, value } = event.target;
-    const numericValue = Math.max(0, parseInt(value) || 0);
+    let numericValue = parseInt(value, 10) || 0;
+
+    // Validate the input range
+    if (
+      (name === "hours" && (numericValue < 0 || numericValue > 23)) ||
+      (name === "minutes" && (numericValue < 0 || numericValue > 59)) ||
+      (name === "seconds" && (numericValue < 0 || numericValue > 59))
+    ) {
+      alert("Enter a valid time period!");
+      numericValue = 0;
+    }
+
     setCustomTime((prev) => ({ ...prev, [name]: numericValue }));
   };
 
   const applyCustomTime = () => {
-    const totalSeconds = customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
+    const totalSeconds =
+      customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
+
     if (totalSeconds > 0) {
       setTime(totalSeconds);
-      setInitialTime(totalSeconds);
+      localStorage.setItem("remainingTime", totalSeconds);
     }
   };
 
@@ -104,16 +123,17 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   return (
     <div className={`container ${isDarkMode ? "dark" : "light"}`}>
       <button className="theme-toggle" onClick={toggleTheme}>
-        <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon"  />
+        <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon" />
       </button>
       <h2>
-        Timer: {Math.floor(time / 3600)}:{String(Math.floor((time % 3600) / 60)).padStart(2, "0")}:
+        Timer: {Math.floor(time / 3600)}:
+        {String(Math.floor((time % 3600) / 60)).padStart(2, "0")}:
         {String(time % 60).padStart(2, "0")}
       </h2>
 
       <select onChange={handlePresetChange} defaultValue="">
         <option value="" disabled>
-          Select Preset
+          Select Timer
         </option>
         <option value="60">1 min</option>
         <option value="300">5 min</option>
@@ -123,11 +143,32 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
 
       <div className="custom-time">
         <label>Hours:</label>
-        <input type="number" name="hours" min="0" max="23" value={customTime.hours} onChange={handleCustomTimeChange} />
+        <input
+          type="number"
+          name="hours"
+          min="0"
+          max="23"
+          value={customTime.hours || ""}
+          onChange={handleCustomTimeChange}
+        />
         <label>Minutes:</label>
-        <input type="number" name="minutes" min="0" max="59" value={customTime.minutes} onChange={handleCustomTimeChange} />
+        <input
+          type="number"
+          name="minutes"
+          min="0"
+          max="59"
+          value={customTime.minutes || ""}
+          onChange={handleCustomTimeChange}
+        />
         <label>Seconds:</label>
-        <input type="number" name="seconds" min="0" max="59" value={customTime.seconds} onChange={handleCustomTimeChange} />
+        <input
+          type="number"
+          name="seconds"
+          min="0"
+          max="59"
+          value={customTime.seconds || ""}
+          onChange={handleCustomTimeChange}
+        />
         <button onClick={applyCustomTime}>Set</button>
       </div>
 
