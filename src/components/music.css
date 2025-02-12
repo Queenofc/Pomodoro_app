@@ -18,6 +18,7 @@ body {
   justify-content: center; /* Centers content horizontally */
   gap: 10px; /* Adjust spacing between logo and text */
   text-align: center;
+  margin-bottom: 25px;
 }
 
 .title img {
@@ -32,7 +33,6 @@ body {
   font-weight: bold;
 }
 
-
 /* 🌙 Dark Mode */
 .dark-mode {
   background-color: #121212;
@@ -43,10 +43,17 @@ body {
 .container {
   max-width: 100vw;
   margin: 10px auto;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
   text-align: center;
   transition: background-color 0.3s ease, color 0.3s ease;
+
+  /* Center horizontally & vertically */
+  display: flex;
+  flex-direction: column; /* Keeps content stacked */
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
+  min-height: 100vh; /* Make sure it takes full screen height */
 }
 
 /* 🌙 Dark Mode Container */
@@ -57,8 +64,8 @@ body {
 /* 🎛️ Theme Toggle */
 .theme-toggle {
   position: absolute;
-  top: 50px;
-  right: 10px;
+  top: 25px;
+  right: 15px;
   width: 40px; /* Fixed width */
   height: 40px; /* Fixed height */
   display: flex;
@@ -86,13 +93,18 @@ body {
 /* 🎵 Music Player Container */
 .music-container {
   text-align: center;
-  padding: 20px;
+  padding: 0px;
   border: 2px solid #ccc;
   border-radius: 25px;
   width: 350px;
+  min-height: 70vh;
   margin: auto;
-  margin-bottom: 20px; 
-  background: linear-gradient(135deg, #ff5400, #d1007a); /* Deeper orange to magenta */
+  margin-bottom: 100px;
+  background: linear-gradient(
+    135deg,
+    #ff5400,
+    #d1007a
+  ); /* Deeper orange to magenta */
   box-shadow: 0 4px 20px rgba(209, 0, 122, 0.4); /* Soft glowing effect */
   transition: background 0.3s ease, box-shadow 0.3s ease;
 }
@@ -104,16 +116,18 @@ body {
 
 /* 🎼 Music Image */
 .music-image {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   border-radius: 10px;
-  margin: 10px 0;
+  margin: 10px 10px;
+  align-items: center;
 }
 
 /* 🎶 Music Info */
-.music-info h3 {
-  margin: 5px 0;
-  font-size: 18px;
+.music-box h3 {
+  margin: 10px 0;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 /* 🎧 Select Dropdown */
@@ -148,12 +162,17 @@ h2 {
   font-size: 45px;
   font-weight: bold;
   color: white;
-  background: radial-gradient(circle, #FF8C00 30%, #FF4500 60%, #222 85%, #000 100%);
+  background: radial-gradient(
+    circle,
+    #ff8c00 30%,
+    #ff4500 60%,
+    #222 85%,
+    #000 100%
+  );
   text-align: center;
   margin: 20px auto; /* Centers it horizontally */
   box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
 }
-
 
 /* ⏰ Custom Time Input */
 .custom-time input {
@@ -182,7 +201,7 @@ h2 {
 button {
   font-family: "PT Sans Narrow", sans-serif;
   background-color: transparent;
-  color: #FF8C00;
+  color: #ff8c00;
   font-weight: bold;
   border: none;
   padding: 15px 20px;
@@ -196,19 +215,19 @@ button {
 
 /* 🔄 Button Hover */
 button:hover {
-  color:	#FFD700;
+  color: #ffd700;
 }
 
 /* 🌙 Dark Mode Buttons */
 .dark-mode button {
-  background-color:transparent;
-  color: #FF8C00;
+  background-color: transparent;
+  color: #ff8c00;
   padding: 15px 20px;
   box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
 }
 
 .dark-mode button:hover {
-  color:	#FFD700;
+  color: #ffd700;
 }
 
 /* 🎨 Mood-Based Cursor Trail */
@@ -252,7 +271,13 @@ button:hover {
 
 .play-btn {
   font-family: "PT Sans Narrow", sans-serif;
-  background: linear-gradient(135deg, #ff1493, #ff4500, #ff0000, #ffd700); /* Pink, Orange, Red, Yellow */
+  background: linear-gradient(
+    135deg,
+    #ff1493,
+    #ff4500,
+    #ff0000,
+    #ffd700
+  ); /* Pink, Orange, Red, Yellow */
   color: white;
   font-weight: bold;
   border: none;
@@ -268,7 +293,13 @@ button:hover {
 /* 🔄 Button Hover */
 .play-btn:hover {
   color: white;
-  background: linear-gradient(135deg, #ff3d7f, #ff6500, #e60000, #ffea00); /* Softer Pink, Brighter Orange, Deep Red, Neon Yellow */
+  background: linear-gradient(
+    135deg,
+    #ff3d7f,
+    #ff6500,
+    #e60000,
+    #ffea00
+  ); /* Softer Pink, Brighter Orange, Deep Red, Neon Yellow */
   transform: scale(1.05);
 }
 
@@ -277,8 +308,8 @@ button:hover {
   transform: scale(0.95);
 }
 .dark-mode .play-btn {
-  color:white;
+  color: white;
 }
 .dark-mode .play-btn:hover {
-  color:white;
+  color: white;
 }
