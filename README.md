@@ -1,7 +1,3 @@
-Here's your updated README with a description for your **Pomodoro Timer App** with a built-in music player:  
-
----
-
 # ⏳ Pomodoro Timer with Music Player  
 
 This project is a **fully responsive Pomodoro Timer** built using **React**, designed to help users stay focused and productive. It features a **customizable timer**, background **music player**, and essential timer controls, making it a perfect companion for work, study, and relaxation. 
@@ -17,8 +13,7 @@ This project is a **fully responsive Pomodoro Timer** built using **React**, des
 
 ## 🛠 Tech Stack  
 
-- **Frontend:** React (for UI and state management)  
-- **Backend:** Node.js (if server-side features are needed)  
+- **Frontend:** React (for UI and state management)    
 - **State Management:** React Hooks  
 
 ## 🚀 Getting Started  
