@@ -39,7 +39,7 @@ const moodData = {
   },
 };
 
-const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
+const MusicPlayer = ({ stopMusicTrigger, onMoodChange, resetTrigger }) => {
   const [mood, setMood] = useState("none");
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef(new Audio());
@@ -50,16 +50,10 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
       setIsPlaying(false);
       onMoodChange("None");
     } else {
-      audioRef.current.pause(); // ✅ Stop previous track before switching
-      audioRef.current.src = moodData[mood.toLowerCase()]?.url || ""; 
-      if (isPlaying) {
-        audioRef.current
-          .play()
-          .catch((error) => console.error("Playback error:", error));
-      }
-      onMoodChange(mood.charAt(0).toUpperCase() + mood.slice(1));
+      audioRef.current.src = moodData[mood]?.url || "";
+      audioRef.current.load();
     }
-  }, [mood, isPlaying,onMoodChange]); 
+  }, [mood, onMoodChange]);
 
   useEffect(() => {
     if (isPlaying) {
@@ -77,43 +71,48 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
       setIsPlaying(false);
       onMoodChange("None");
     }
-  }, [stopMusicTrigger,onMoodChange]); 
+  }, [stopMusicTrigger, onMoodChange]);
+
+  useEffect(() => {
+    if (resetTrigger) {
+      audioRef.current.pause();
+      setMood("none");
+      setIsPlaying(false);
+      onMoodChange("None");
+    }
+  }, [resetTrigger, onMoodChange]);
 
   useEffect(() => {
     const audio = audioRef.current;
-
     const handleSongEnd = () => {
       audio.currentTime = 0;
-      audio.play();
+      audio.play().catch((error) => console.error("Playback error:", error));
     };
 
     audio.addEventListener("ended", handleSongEnd);
-
     return () => {
-      audio.removeEventListener("ended", handleSongEnd); // ✅ Proper cleanup
+      audio.removeEventListener("ended", handleSongEnd);
     };
-  }, [mood]); // ✅ Ensure this updates when mood changes
+  }, [mood]);
 
   return (
     <div className="music-container">
       <h2>Music Player</h2>
-      <select onChange={(e) => setMood(e.target.value.toLowerCase())} value={mood}>
+      <select onChange={(e) => setMood(e.target.value)} value={mood}>
         <option value="none">None</option>
         {Object.keys(moodData).map((key) => (
-          <option key={key} value={key.toLowerCase()}>
-            {key.charAt(0).toUpperCase() + key.slice(1)}
-          </option>
+          <option key={key} value={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</option>
         ))}
       </select>
 
       {mood !== "none" && (
         <div className="music-box">
           <img
-            src={moodData[mood.toLowerCase()]?.image}
-            alt={moodData[mood.toLowerCase()]?.title}
+            src={moodData[mood]?.image}
+            alt={moodData[mood]?.title}
             className="music-image"
           />
-          <h3>{moodData[mood.toLowerCase()]?.title}</h3>
+          <h3>{moodData[mood]?.title}</h3>
           <button className="play-btn" onClick={() => setIsPlaying(!isPlaying)}>
             {isPlaying ? "Pause" : "Play"}
           </button>
