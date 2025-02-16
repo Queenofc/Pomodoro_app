@@ -9,31 +9,31 @@ import jazz from "../images/jazz.png";
 const moodData = {
   work: {
     title: "Simple Harmony",
-    url: "/audio/Idea10.mp3",
+    url: "/audio/working.mp3",
     color: "#40E0D0",
     image: work,
   },
   meditation: {
     title: "Calm Waves",
-    url: "/audio/Inyourarms.mp3",
+    url: "/audio/meditation.mp3",
     color: "#4CAF50",
     image: meditate,
   },
   cooking: {
     title: "Kitchen Vibes",
-    url: "/audio/Immaterial.mp3",
+    url: "/audio/cooking.mp3",
     color: "#ffcc00",
     image: cook,
   },
   exercise: {
     title: "Energy Boost",
-    url: "/audio/Truth.mp3",
+    url: "/audio/exercise.mp3",
     color: "#DFFF00",
     image: exercise,
   },
   jazz: {
     title: "Smooth Jazz",
-    url: "/audio/Nostalgia.mp3",
+    url: "/audio/jazz.mp3",
     color: "#800080",
     image: jazz,
   },
