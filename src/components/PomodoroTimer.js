@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./music.css";
-import sunIcon from "../images/sun.png"; // Light mode icon
-import moonIcon from "../images/moon.png"; // Dark mode icon
+import sunIcon from "../images/sun.png";
+import moonIcon from "../images/moon.png";
 import logo from "../images/logo.png";
 
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const [time, setTime] = useState(() => {
-    return parseInt(localStorage.getItem("remainingTime"), 10) || 0;
+    return parseInt(sessionStorage.getItem("remainingTime"), 10) || 0;
   });
   const [isActive, setIsActive] = useState(() => {
-    return localStorage.getItem("isTimerActive") === "true";
+    return sessionStorage.getItem("isTimerActive") === "true";
   });
   const [customTime, setCustomTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem("darkMode") === "true";
+    return sessionStorage.getItem("darkMode") === "true";
   });
 
   const alarmSound = useRef(new Audio("https://www.fesliyanstudios.com/play-mp3/4387"));
@@ -24,6 +24,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
     } else {
       document.body.classList.remove("dark-mode");
     }
+    sessionStorage.setItem("darkMode", isDarkMode);
   }, [isDarkMode]);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       timer = setInterval(() => {
         setTime((prev) => {
           const newTime = prev - 1;
-          localStorage.setItem("remainingTime", newTime);
+          sessionStorage.setItem("remainingTime", newTime);
           return newTime;
         });
       }, 1000);
@@ -47,7 +48,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   }, [isActive, time, setStopMusicTrigger]);
 
   useEffect(() => {
-    localStorage.setItem("isTimerActive", isActive);
+    sessionStorage.setItem("isTimerActive", isActive);
   }, [isActive]);
 
   const startTimer = () => {
@@ -62,7 +63,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const stopTimer = () => {
     setIsActive(false);
     setTime(0);
-    localStorage.setItem("remainingTime", 0);
+    sessionStorage.setItem("remainingTime", 0);
     setStopMusicTrigger(true);
     alarmSound.current.pause();
     alarmSound.current.currentTime = 0;
@@ -72,7 +73,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const resetTimer = () => {
     setIsActive(false);
     setTime(0);
-    localStorage.setItem("remainingTime", 0);
+    sessionStorage.setItem("remainingTime", 0);
     setStopMusicTrigger(true);
     alarmSound.current.pause();
     alarmSound.current.currentTime = 0;
@@ -83,7 +84,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
     const presetTimes = { 60: 60, 300: 5 * 60, 1500: 25 * 60, 2700: 45 * 60 };
     const newTime = presetTimes[event.target.value] || 0;
     setTime(newTime);
-    localStorage.setItem("remainingTime", newTime);
+    sessionStorage.setItem("remainingTime", newTime);
   };
 
   const handleCustomTimeChange = (event) => {
@@ -102,16 +103,12 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
     const totalSeconds = customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
     if (totalSeconds > 0) {
       setTime(totalSeconds);
-      localStorage.setItem("remainingTime", totalSeconds);
+      sessionStorage.setItem("remainingTime", totalSeconds);
     }
   };
 
   const toggleTheme = () => {
-    setIsDarkMode((prev) => {
-      const newMode = !prev;
-      localStorage.setItem("darkMode", newMode);
-      return newMode;
-    });
+    setIsDarkMode((prev) => !prev);
   };
 
   return (
