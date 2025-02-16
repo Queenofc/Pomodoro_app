@@ -2,31 +2,38 @@ import React, { useState, useEffect, useRef } from "react";
 import "./music.css";
 import sunIcon from "../images/sun.png"; // Light mode icon
 import moonIcon from "../images/moon.png"; // Dark mode icon
-import logo from "../images/logo.png"; 
+import logo from "../images/logo.png";
 
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
-  const [time, setTime] = useState(0);
-  const [isActive, setIsActive] = useState(false);
-  const [customTime, setCustomTime] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
+  const [time, setTime] = useState(() => {
+    return parseInt(localStorage.getItem("remainingTime"), 10) || 0;
   });
-  const [isDarkMode, setIsDarkMode] = useState(
-    () => localStorage.getItem("darkMode") === "true"
-  );
+  const [isActive, setIsActive] = useState(() => {
+    return localStorage.getItem("isTimerActive") === "true";
+  });
+  const [customTime, setCustomTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
 
-  const alarmSound = useRef(
-    new Audio("https://www.fesliyanstudios.com/play-mp3/4387")
-  );
+  const alarmSound = useRef(new Audio("https://www.fesliyanstudios.com/play-mp3/4387"));
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     let timer;
     if (isActive && time > 0) {
       timer = setInterval(() => {
         setTime((prev) => {
-          localStorage.setItem("remainingTime", prev - 1);
-          return prev - 1;
+          const newTime = prev - 1;
+          localStorage.setItem("remainingTime", newTime);
+          return newTime;
         });
       }, 1000);
     } else if (time === 0 && isActive) {
@@ -35,17 +42,13 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       setStopMusicTrigger(true);
       alarmSound.current.loop = true;
       alarmSound.current.play();
-    } else {
-      clearInterval(timer);
     }
     return () => clearInterval(timer);
   }, [isActive, time, setStopMusicTrigger]);
 
   useEffect(() => {
-    // Reset timer to 0 on refresh
-    localStorage.setItem("remainingTime", 0);
-    setTime(0);
-  }, []);
+    localStorage.setItem("isTimerActive", isActive);
+  }, [isActive]);
 
   const startTimer = () => {
     if (time > 0) {
@@ -59,6 +62,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const stopTimer = () => {
     setIsActive(false);
     setTime(0);
+    localStorage.setItem("remainingTime", 0);
     setStopMusicTrigger(true);
     alarmSound.current.pause();
     alarmSound.current.currentTime = 0;
@@ -68,6 +72,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const resetTimer = () => {
     setIsActive(false);
     setTime(0);
+    localStorage.setItem("remainingTime", 0);
     setStopMusicTrigger(true);
     alarmSound.current.pause();
     alarmSound.current.currentTime = 0;
@@ -75,37 +80,26 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   };
 
   const handlePresetChange = (event) => {
-    const presetTimes = {
-      60: 60,
-      300: 5 * 60,
-      1500: 25 * 60,
-      2700: 45 * 60,
-    };
+    const presetTimes = { 60: 60, 300: 5 * 60, 1500: 25 * 60, 2700: 45 * 60 };
     const newTime = presetTimes[event.target.value] || 0;
     setTime(newTime);
+    localStorage.setItem("remainingTime", newTime);
   };
 
   const handleCustomTimeChange = (event) => {
     const { name, value } = event.target;
     let numericValue = parseInt(value, 10) || 0;
-
-    // Validate the input range
-    if (
-      (name === "hours" && (numericValue < 0 || numericValue > 23)) ||
-      (name === "minutes" && (numericValue < 0 || numericValue > 59)) ||
-      (name === "seconds" && (numericValue < 0 || numericValue > 59))
-    ) {
+    if ((name === "hours" && (numericValue < 0 || numericValue > 23)) ||
+        (name === "minutes" && (numericValue < 0 || numericValue > 59)) ||
+        (name === "seconds" && (numericValue < 0 || numericValue > 59))) {
       alert("Enter a valid time period!");
       numericValue = 0;
     }
-
     setCustomTime((prev) => ({ ...prev, [name]: numericValue }));
   };
 
   const applyCustomTime = () => {
-    const totalSeconds =
-      customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
-
+    const totalSeconds = customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
     if (totalSeconds > 0) {
       setTime(totalSeconds);
       localStorage.setItem("remainingTime", totalSeconds);
@@ -118,7 +112,6 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       localStorage.setItem("darkMode", newMode);
       return newMode;
     });
-    document.body.classList.toggle("dark-mode");
   };
 
   return (
@@ -127,7 +120,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
         <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon" />
       </button>
       <div className="title">
-        <img src={logo}alt=""/>
+        <img src={logo} alt="" />
         <h1>Chill With Pomodoro</h1>
       </div>
       <h2>
@@ -137,9 +130,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       </h2>
 
       <select onChange={handlePresetChange} defaultValue="">
-        <option value="" disabled>
-          Select Timer
-        </option>
+        <option value="" disabled>Select Timer</option>
         <option value="60">1 min</option>
         <option value="300">5 min</option>
         <option value="1500">25 min</option>
@@ -148,32 +139,11 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
 
       <div className="custom-time">
         <label>Hours:</label>
-        <input
-          type="number"
-          name="hours"
-          min="0"
-          max="23"
-          value={customTime.hours || ""}
-          onChange={handleCustomTimeChange}
-        />
+        <input type="number" name="hours" min="0" max="23" value={customTime.hours || ""} onChange={handleCustomTimeChange} />
         <label>Minutes:</label>
-        <input
-          type="number"
-          name="minutes"
-          min="0"
-          max="59"
-          value={customTime.minutes || ""}
-          onChange={handleCustomTimeChange}
-        />
+        <input type="number" name="minutes" min="0" max="59" value={customTime.minutes || ""} onChange={handleCustomTimeChange} />
         <label>Seconds:</label>
-        <input
-          type="number"
-          name="seconds"
-          min="0"
-          max="59"
-          value={customTime.seconds || ""}
-          onChange={handleCustomTimeChange}
-        />
+        <input type="number" name="seconds" min="0" max="59" value={customTime.seconds || ""} onChange={handleCustomTimeChange} />
         <button onClick={applyCustomTime}>Set</button>
       </div>
 
