@@ -48,7 +48,7 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
     if (mood === "none") {
       audioRef.current.pause();
       setIsPlaying(false);
-      onMoodChange("None");
+      onMoodChange("none");
     } else {
       audioRef.current.pause(); // ✅ Stop previous track before switching
       audioRef.current.src = moodData[mood.toLowerCase()]?.url || ""; 
