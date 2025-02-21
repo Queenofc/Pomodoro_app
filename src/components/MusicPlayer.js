@@ -9,7 +9,7 @@ import jazz from "../images/jazz.png";
 const moodData = {
   work: {
     title: "Simple Harmony",
-    url: "/audio/Idea10.mp3",
+    url: "/audio/meditation.mp3",
     color: "#40E0D0",
     image: work,
   },
@@ -115,7 +115,7 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
           />
           <h3>{moodData[mood.toLowerCase()]?.title}</h3>
           <button className="play-btn" onClick={() => setIsPlaying(!isPlaying)}>
-            {isPlaying ? "Pause" : "Play"}
+          {isPlaying ? "⏸ Pause" : "▶ Play"}
           </button>
         </div>
       )}
