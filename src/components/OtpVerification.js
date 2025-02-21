@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./music.css";
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PomodoroTimer from "./PomodoroTimer";
 import MusicPlayer from "./MusicPlayer";
 import { useNavigate } from "react-router-dom";
+import "./music.css";
 
 const moodColors = {
   Work: "#ff5733",

@@ -44,7 +44,6 @@ body {
   color: white;
 }
 
-
 @media (min-width: 768px) {
   .title img {
     width: 70px; /* Increase image size */
@@ -225,6 +224,7 @@ h2 {
     #222 85%,
     #000 100%
   );
+
   text-align: center;
   margin: 20px auto; /* Centers it horizontally */
   box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
@@ -370,62 +370,195 @@ button:hover {
   color: white;
 }
 
-.register-container {
+/* Login.css */
+.login {
+  width: 350px;
+  padding: 30px;
+  background: linear-gradient(135deg, #ff8c00, #ff4500);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-family: "PT Sans Narrow", sans-serif;
+  color: white;
+
+  /* Centering the login box */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login h2 {
+  font-size: 50px;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+.login input {
+  font-family: "PT Sans Narrow", sans-serif;
+  width: 78%; /* Ensures all inputs are the same width */
+  padding: 12px;
+  margin: 15px auto; /* Centers the input */
+  display: block; /* Ensures proper centering */
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  transition: all 0.3s ease-in-out;
+}
+
+.login input:focus {
+  background: white;
+  border: 2px solid #ffd700;
+}
+
+.login button {
+  width: 85%; /* Matches input width */
+  padding: 12px;
+  background: #ffd700;
+  color: #222;
+  border: none;
+  margin: 10px auto;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  display: block; /* Centers the button */
+  transition: background 0.3s ease-in-out;
+}
+
+.login button:hover {
+  text-align: center;
+  background: #ffea00;
+}
+
+.login button:disabled {
+  background: #c5c5c5;
+  cursor: not-allowed;
+}
+
+.login p {
+  font-weight: bold;
+  font-size: 15px;
+  margin-top: 15px;
+}
+
+.login a {
+  color: #ffd700;
+  text-decoration: none;
+}
+
+.login a:hover {
+  text-decoration: none;
+  color: yellow;
+}
+
+/* Captcha */
+.captcha-container {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: #1e1e1e;
+  margin: 15px 0;
+  transform: scale(0.98);
+  transform-origin: center;
 }
 
-.register-box {
-  background: #2c2c2c;
+/* Responsive */
+@media (max-width: 400px) {
+  .login {
+    width: 80%;
+    padding: 25px;
+  }
+  .login input {
+    width: 78%; /* Full width on small screens */
+  }
+  .captcha-container {
+    transform: scale(0.85);
+  }
+  .login button {
+    text-align: center;
+    width: 85%; /* Full width on small screens */
+  }
+}
+
+/* Register.css */
+.register-container {
+  width: 350px;
   padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #ff8c00, #ff4500);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   text-align: center;
+  font-family: "PT Sans Narrow", sans-serif;
   color: white;
+
+  /* Centering the register form */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.register-box h2 {
+.register-container h2 {
+  font-size: 50px;
   margin-bottom: 20px;
 }
 
-.register-box input {
-  width: 100%;
-  padding: 10px;
+.register-container input {
+  width: 80%;
+  font-family: "PT Sans Narrow", sans-serif;
+  padding: 12px;
   margin: 10px 0;
   border: none;
   border-radius: 5px;
+  font-size: 16px;
 }
 
-.error-message {
-  color: red;
-  font-size: 14px;
+.register-container input:focus {
+  outline: none;
+  border: 2px solid white;
 }
 
-button {
-  background: #ff5733;
-  color: white;
+.register-container button {
+  width: 89%;
+  padding: 12px;
+  background: #ffd700;
+  color: #222;
+  font-size: 18px;
+  font-weight: bold;
   border: none;
-  padding: 10px;
-  width: 100%;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 15px;
+  transition: background 0.3s, color 0.3s;
 }
 
-button:hover {
-  background: #e74c3c;
+.register-container button:hover {
+  background: #ff4500;
+  color: white;
 }
 
-.switch-auth {
-  margin-top: 10px;
-  color: #ccc;
+.register-container p {
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: bold;
 }
 
-.switch-auth span {
-  color: #ff5733;
-  cursor: pointer;
-  text-decoration: underline;
+.register-container a {
+  color: #ffd700;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.register-container a:hover {
+  text-decoration: none;
+  background: #ffea00;
+}
+/* Responsive */
+@media (max-width: 400px) {
+.register-container {
+  width: 75%;
+}
 }

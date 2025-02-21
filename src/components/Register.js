@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./music.css"; // ✅ Import styles
 
 const Register = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
@@ -11,7 +12,7 @@ const Register = () => {
   };
 
   return (
-    <div>
+    <div className="register-container">
       <h2>Register</h2>
       <input type="email" placeholder="Email" onChange={(e) => setUserData({ ...userData, email: e.target.value })} />
       <input type="password" placeholder="Password" onChange={(e) => setUserData({ ...userData, password: e.target.value })} />
