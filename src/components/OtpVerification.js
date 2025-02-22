@@ -15,10 +15,19 @@ const OtpVerification = () => {
   };
 
   return (
-    <div>
-      <h2>Enter OTP</h2>
-      <input type="text" placeholder="Enter OTP" onChange={(e) => setOtp(e.target.value)} />
-      <button onClick={handleOtpSubmit}>Verify OTP</button>
+    <div className="otp-container">
+      <h2>OTP Verification</h2>
+      <p>Enter the OTP sent to your registered email or phone.</p>
+      <input
+        type="text"
+        placeholder="Enter OTP"
+        className="otp-input"
+        value={otp}
+        onChange={(e) => setOtp(e.target.value)}
+      />
+      <button className="otp-button" onClick={handleOtpSubmit}>
+        Verify OTP
+      </button>
     </div>
   );
 };
