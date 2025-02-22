@@ -536,8 +536,7 @@ button:hover {
 }
 
 .register-container button:hover {
-  background: #ff4500;
-  color: white;
+  background: yellow;
 }
 
 .register-container p {
@@ -554,7 +553,7 @@ button:hover {
 
 .register-container a:hover {
   text-decoration: none;
-  background: #ffea00;
+  color: #ffea00;
 }
 /* Responsive */
 @media (max-width: 400px) {
