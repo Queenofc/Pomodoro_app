@@ -629,3 +629,15 @@ button:hover {
     width: 75%;
   }
 }
+
+.captcha-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tick {
+  color: green;
+  font-size: 20px;
+  font-weight: bold;
+}
