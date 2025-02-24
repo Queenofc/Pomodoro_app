@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./music.css"; // ✅ Import styles
+import "./music.css"; // ✅ Keep your existing styles
 
 const Register = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -51,12 +52,19 @@ const Register = () => {
         value={userData.email}
         onChange={(e) => setUserData({ ...userData, email: e.target.value })}
       />
-      <input
-        type="password"
-        placeholder="Password"
-        value={userData.password}
-        onChange={(e) => setUserData({ ...userData, password: e.target.value })}
-      />
+<div className="password-container">
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    value={userData.password}
+    onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+    className="password-input"
+  />
+  <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+    {showPassword ? "👁️" : "👁️‍🗨️"}
+  </span>
+</div>
+
       {error && <p className="error-message">{error}</p>}
       <button onClick={handleRegister}>Register</button>
       <p>Already registered? <a href="/login">Login here</a></p>

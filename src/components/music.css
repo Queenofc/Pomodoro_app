@@ -505,17 +505,15 @@ button:hover {
   font-size: 50px;
   margin-bottom: 20px;
 }
-
 .register-container input {
   width: 80%;
   font-family: "PT Sans Narrow", sans-serif;
   padding: 12px;
-  margin: 10px 0;
+  margin: 10px auto;
   border: none;
   border-radius: 5px;
   font-size: 16px;
 }
-
 .register-container input:focus {
   outline: none;
   border: 2px solid white;
@@ -555,6 +553,40 @@ button:hover {
   text-decoration: none;
   color: #ffea00;
 }
+.password-container {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 5px;
+  padding: 0 12px;
+  margin: 10px auto;
+  border: none;
+}
+.password-container input.password-input {
+  flex: 1;
+  margin:-12px;
+  height: 5px;
+  border: none !important;
+  outline: none !important;
+  font-size: 16px;
+  background: transparent;
+  padding: 12px;
+}
+.password-container input.password-input:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.password-toggle {
+  cursor: pointer;
+  font-size: 18px;
+  padding: 10px;
+}
+.register-container input:not(.password-input) {
+  display: block; /* Ensures normal inputs are not affected */
+}
+
 /* Responsive */
 @media (max-width: 400px) {
 .register-container {
@@ -641,3 +673,5 @@ button:hover {
   font-size: 20px;
   font-weight: bold;
 }
+
+
