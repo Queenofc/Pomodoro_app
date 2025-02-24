@@ -7,7 +7,8 @@ const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [captchaVerified, setCaptchaVerified] = useState(false);
-  const navigate = useNavigate(); // ✅ Initialize navigate
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const handleCaptcha = (value) => {
     setCaptchaVerified(!!value);
@@ -47,12 +48,18 @@ const Login = () => {
         value={userData.email}
         onChange={(e) => setUserData({ ...userData, email: e.target.value })}
       />
-      <input
-        type="password"
-        placeholder="Password"
-        value={userData.password}
-        onChange={(e) => setUserData({ ...userData, password: e.target.value })}
-      />
+      <div className="password-container">
+        <input
+          type={showPassword ? "text" : "password"}
+          className="password-input"
+          placeholder="Password"
+          value={userData.password}
+          onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+        />
+        <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+          {showPassword ? "👁️" : "👁️‍🗨️"}
+        </span>
+      </div>
       {error && <p className="error-message">{error}</p>}
       <div className="captcha-container">
       <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} onChange={handleCaptcha} />
