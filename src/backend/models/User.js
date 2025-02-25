@@ -5,8 +5,8 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   otp: { type: String, default: null },
   otpExpiresAt: { type: Date, default: null },
-  twoFASecret: { type: String, default: null }, // Stores the Google Authenticator secret
-  twoFAEnabled: { type: Boolean, default: false } // Checks if 2FA is enabled
+  twoFASecret: { type: String, default: null }, // Stores Google Authenticator secret
+  twoFAEnabled: { type: Boolean, default: true } // Always require 2FA
 });
 
 module.exports = mongoose.model("User", UserSchema);

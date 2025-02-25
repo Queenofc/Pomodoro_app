@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import "./music.css";
 
-const Login = () => {
+const Login = ({ onLogin }) => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [captchaVerified, setCaptchaVerified] = useState(false);
@@ -16,28 +16,37 @@ const Login = () => {
 
   const handleLogin = async () => {
     const { email, password } = userData;
-    if (!email.includes("@") || password.length < 6) {
-      setError("Invalid email or password");
-      return;
-    }
+
     try {
-      const response = await fetch("http://localhost:5000/login", {
+      const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await response.json();
-      if (data.success) {
-        localStorage.setItem("auth", "true"); // ✅ Mark user as logged in
-        navigate("/"); // ✅ Redirect to Home
+      console.log("🔄 Login Response:", data);
+
+      if (!response.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      // ✅ Check if 2FA is required
+      if (data.requires2FA) {
+        console.log("🔑 2FA Required. Redirecting to verification...");
+        navigate("/verify", { state: { email } });
       } else {
-        setError(data.error || "Login failed.");
+        console.log("✅ Logged in successfully!");
+        localStorage.setItem("auth", "true"); // Store authentication status
+        localStorage.setItem("token", data.token); // Store JWT token
+        onLogin(); // Update authentication state in App.js
+        navigate("/home"); // Redirect to home
       }
     } catch (err) {
-      setError("Server error. Please try again.");
+      console.error("❌ Login Error:", err.message);
+      setError(err.message || "Server error. Please try again.");
     }
-  };  
+  };
 
   return (
     <div className="login">
@@ -62,7 +71,7 @@ const Login = () => {
       </div>
       {error && <p className="error-message">{error}</p>}
       <div className="captcha-container">
-      <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} onChange={handleCaptcha} />
+        <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} onChange={handleCaptcha} />
       </div>
       <button onClick={handleLogin} disabled={!captchaVerified}>
         Login
