@@ -14,14 +14,12 @@ const Verify2FA = () => {
 
   useEffect(() => {
     if (!email) {
-      console.error("❌ No email found, redirecting...");
       navigate("/login");
       return;
     }
   
     axios.post("http://localhost:5000/2fa/generate-qr", { email })
       .then((res) => {
-        console.log("✅ QR Code Response:", res.data);
         if (res.data.qrCode) {
           setQrCode(res.data.qrCode);
         } else {
@@ -33,32 +31,23 @@ const Verify2FA = () => {
   }, [email, navigate,location.state]);
   
 
-  const handleVerify = async () => {
-    console.log("🟢 handleVerify called!");
-  
+  const handleVerify = async () => {  
     if (!email || !code) {
-      console.error("❌ Missing email or OTP.");
       alert("Please enter OTP.");
       return;
     }
-  
-    console.log("📨 Sending verification request for:", email, "with code:", code);
-  
+
     try {
       const res = await axios.post("http://localhost:5000/2fa/verify-2fa", { email, code });
-  
-      console.log("✅ Server Response:", res.data);
   
       if (res.data.success) {
         login(res.data.token);
         alert(res.data.message);
         navigate("/home");
       } else {
-        console.error("❌ OTP verification failed.");
         alert("Invalid OTP. Try again.");
       }
     } catch (err) {
-      console.error("❌ Error verifying OTP:", err);
       alert("Error verifying OTP. Check console.");
     }
   };

@@ -19,10 +19,6 @@ router.post("/generate-qr", async (req, res) => {
     // 🚨 Always generate a new secret (Forces fresh QR on every login)
     const secret = speakeasy.generateSecret({ length: 20 });
     const otpauthUrl = `otpauth://totp/ChillWithPomodoro?secret=${secret.base32}&issuer=ChillWithPomodoro`;
-
-    console.log("Generated Secret:", secret.base32); // Debugging
-    console.log("OTP Auth URL:", otpauthUrl); // Debugging
-
     const qrCode = await qrcode.toDataURL(otpauthUrl);
 
     // Store secret temporarily
@@ -31,7 +27,6 @@ router.post("/generate-qr", async (req, res) => {
 
     res.json({ success: true, qrCode, message: "Scan this QR code to enable 2FA" });
   } catch (error) {
-    console.error("QR Code Generation Error:", error);
     res.status(500).json({ error: "Internal server error", details: error.message });
   }
 });

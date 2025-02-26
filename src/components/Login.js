@@ -30,22 +30,18 @@ const Login = () => {
       });
   
       const data = await response.json();
-      console.log("🔄 Login Response:", data);
   
       if (!response.ok) {
         throw new Error(data.error || "Login failed");
       }
   
       if (data.requires2FA) {
-        console.log("2FA Required. Redirecting to verification...");
         navigate("/verify", { state: { email: userData.email } });
       } else {
-        console.log("✅ Logged in successfully!");
         login(data.token);
         navigate("/home"); // Redirect to home
       }
     } catch (err) {
-      console.error("❌ Login Error:", err.message);
       setError(err.message || "Server error. Please try again.");
     }
   };
