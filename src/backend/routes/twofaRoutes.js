@@ -16,20 +16,27 @@ router.post("/generate-qr", async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    // 🚨 Always generate a new secret (Forces fresh QR on every login)
-    const secret = speakeasy.generateSecret({ length: 20 });
-    const otpauthUrl = `otpauth://totp/ChillWithPomodoro?secret=${secret.base32}&issuer=ChillWithPomodoro`;
-    const qrCode = await qrcode.toDataURL(otpauthUrl);
+    // If a secret already exists, reuse it; otherwise, generate a new one.
+    let secret;
+    if (user.twoFASecret) {
+      secret = { base32: user.twoFASecret };
+    } else {
+      secret = speakeasy.generateSecret({ length: 20 });
+      user.twoFASecret = secret.base32;
+      await user.save();
+    }
 
-    // Store secret temporarily
-    user.twoFASecret = secret.base32;
-    await user.save();
+    // Generate the otpauth URL and corresponding QR Code
+    const otpauthUrl = `otpauth://totp/${encodeURIComponent(user.email + ': ChillWithPomodoro')}?secret=${secret.base32}`;
+    const qrCode = await qrcode.toDataURL(otpauthUrl);
 
     res.json({ success: true, qrCode, message: "Scan this QR code to enable 2FA" });
   } catch (error) {
+    console.error("QR Code Generation Error:", error);
     res.status(500).json({ error: "Internal server error", details: error.message });
   }
 });
+
 router.post("/verify-2fa", async (req, res) => {
   const { email, code } = req.body;
 
