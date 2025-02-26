@@ -18,6 +18,7 @@ app.use(express.json());
 connectDB();
 
 // Mount routes
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use("/auth", authRoutes);
 app.use("/otp", otpRoutes);
 app.use("/2fa", twofaRoutes);

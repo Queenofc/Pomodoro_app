@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require("bcrypt");
 const router = express.Router();
 const User = require("../models/User");
 const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
@@ -21,7 +22,11 @@ router.post("/register", async (req, res) => {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ error: "User already exists. Please login." });
 
-    user = new User({ email, password, otp, otpExpiresAt: otpExpiry });
+    // Hash the password using bcrypt
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    user = new User({ email, password: hashedPassword, otp, otpExpiresAt: otpExpiry });
     await user.save();
 
     const response = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -31,7 +36,7 @@ router.post("/register", async (req, res) => {
         sender: { email: SENDER_EMAIL },
         to: [{ email }],
         subject: "OTP for Registeration",
-        htmlContent: `<p>Welcome to Chill With Pomodoro ! Your OTP for registration is: <strong>${otp}</strong></p>`,
+        htmlContent: `<p>Welcome to Chill With Pomodoro! Your OTP for registration is: <strong>${otp}</strong></p>`,
       }),
     });
 

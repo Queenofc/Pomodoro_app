@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 const Verify2FA = () => {
   const [qrCode, setQrCode] = useState("");
@@ -9,10 +10,9 @@ const Verify2FA = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
+  const { login } = useAuth();
 
   useEffect(() => {
-    console.log("📨 Sending request to fetch QR Code for:", email);
-    
     if (!email) {
       console.error("❌ No email found, redirecting...");
       navigate("/login");
@@ -30,7 +30,7 @@ const Verify2FA = () => {
       })
       .catch((err) => console.error("❌ Error fetching QR Code:", err))
       .finally(() => setLoading(false));
-  }, [email, navigate]);
+  }, [email, navigate,location.state]);
   
 
   const handleVerify = async () => {
@@ -50,7 +50,7 @@ const Verify2FA = () => {
       console.log("✅ Server Response:", res.data);
   
       if (res.data.success) {
-        localStorage.setItem("token", res.data.token);
+        login(res.data.token);
         alert(res.data.message);
         navigate("/home");
       } else {

@@ -1,45 +1,47 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useAuth } from "../AuthContext"; // ✅ Import AuthContext
 import "./music.css";
 
-const Login = ({ onLogin }) => {
+const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth(); // ✅ Use global login function
 
   const handleCaptcha = (value) => {
     setCaptchaVerified(!!value);
   };
 
-  const handleLogin = async () => {
-    const { email, password } = userData;
-
+  const handleLogin = async () => {  
+    if (!userData || !userData.email || !userData.password) {
+      setError("Please enter both email and password.");
+      return;
+    }
+  
     try {
       const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: userData.email, password: userData.password }),
       });
-
+  
       const data = await response.json();
       console.log("🔄 Login Response:", data);
-
+  
       if (!response.ok) {
         throw new Error(data.error || "Login failed");
       }
-
-      // ✅ Check if 2FA is required
+  
       if (data.requires2FA) {
-        console.log("🔑 2FA Required. Redirecting to verification...");
-        navigate("/verify", { state: { email } });
+        console.log("2FA Required. Redirecting to verification...");
+        navigate("/verify", { state: { email: userData.email } });
       } else {
         console.log("✅ Logged in successfully!");
-        localStorage.setItem("auth", "true"); // Store authentication status
-        localStorage.setItem("token", data.token); // Store JWT token
-        onLogin(); // Update authentication state in App.js
+        login(data.token);
         navigate("/home"); // Redirect to home
       }
     } catch (err) {
@@ -47,7 +49,7 @@ const Login = ({ onLogin }) => {
       setError(err.message || "Server error. Please try again.");
     }
   };
-
+  
   return (
     <div className="login">
       <h2>Login</h2>
@@ -69,10 +71,10 @@ const Login = ({ onLogin }) => {
           {showPassword ? "👁️" : "👁️‍🗨️"}
         </span>
       </div>
-      {error && <p className="error-message">{error}</p>}
       <div className="captcha-container">
         <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} onChange={handleCaptcha} />
       </div>
+      {error && <p className="error-message">{error}</p>}
       <button onClick={handleLogin} disabled={!captchaVerified}>
         Login
       </button>
