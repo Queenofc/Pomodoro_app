@@ -466,7 +466,7 @@ button:hover {
 }
 
 /* Responsive */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
   .login {
     width: 80%;
     padding: 25px;
@@ -556,12 +556,12 @@ button:hover {
   color: #ffea00;
 }
 .password-container {
-  width: 78%;
+  width: 82%;
   display: flex;
   align-items: center;
   background: white;
   border-radius: 5px;
-  padding: 0 12px;
+  padding-left:12px;
   margin: 10px auto;
   border: none;
 }
@@ -569,6 +569,7 @@ button:hover {
   flex: 1;
   margin:-12px;
   height: 5px;
+  margin-right: 2px;
   border: none !important;
   outline: none !important;
   font-size: 16px;
@@ -583,16 +584,33 @@ button:hover {
 .password-toggle {
   cursor: pointer;
   font-size: 18px;
-  padding: 10px;
+  padding: 10px 3px;
 }
 .register-container input:not(.password-input) {
   display: block; /* Ensures normal inputs are not affected */
 }
 
 /* Responsive */
-@media (max-width: 400px) {
+@media (max-width: 500px) {
 .register-container {
   width: 75%;
+}
+.register-container button {
+  width: 86%;
+  padding: 12px;
+  background: #ffd700;
+  color: #222;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.register-container button:hover {
+  background: yellow;
 }
 }
 
@@ -617,6 +635,11 @@ button:hover {
   margin-bottom: 20px;
 }
 
+.otp-container h1 {
+  font-size: 15px;
+  margin: 10px 15px ;
+}
+
 .otp-container p {
   font-size: 19px;
   font-weight: bold;
@@ -639,7 +662,7 @@ button:hover {
 }
 
 .otp-button {
-  width: 89%;
+  width: 87%;
   padding: 12px;
   background: #ffd700;
   color: #222;
