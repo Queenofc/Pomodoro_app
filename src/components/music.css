@@ -589,6 +589,33 @@ button:hover {
 .register-container input:not(.password-input) {
   display: block; /* Ensures normal inputs are not affected */
 }
+.password-validation {
+  text-align: left;
+  margin: 10px auto;
+  width: 82%;
+  font-size: 15px;
+}
+
+.password-validation p {
+  font-weight: bold;
+  margin: 5px 0;
+  display: flex;
+  align-items: center;
+}
+
+.password-validation .valid {
+  color:#A4FF2A;
+}
+
+.password-validation .invalid {
+  color:#D41F30; 
+}
+
+
+.password-validation span {
+  margin-right: 8px;
+  font-size: 18px;
+}
 
 /* Responsive */
 @media (max-width: 500px) {
