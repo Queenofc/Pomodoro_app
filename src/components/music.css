@@ -531,7 +531,7 @@ button:hover {
     width: 78%;
   }
   .captcha-container {
-    transform: scale(0.85);
+    transform: scale(0.93);
   }
   .login button {
     text-align: center;
@@ -886,3 +886,19 @@ button:hover {
   line-height: 1.4; /* Increases readability */
   word-wrap: break-word; /* Prevents text overflow */
 }
+
+.qr-placeholder {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  background-color: #ccc;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 20px;
+  color: #555;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin: auto; /* Centers it horizontally */
+}
+

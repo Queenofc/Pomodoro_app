@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./music.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { ToastContainer, toast } from "react-toastify";
+import "./music.css";
 
 const Verify2FA = () => {
   const [qrCode, setQrCode] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(true);
+  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
@@ -27,7 +28,7 @@ const Verify2FA = () => {
         if (res.data.qrCode) {
           setQrCode(res.data.qrCode);
         } else {
-          toast.error("QR Code not received from backend!");
+          setIs2FAEnabled(true);
         }
       })
       .catch((err) => {
@@ -42,11 +43,11 @@ const Verify2FA = () => {
       toast.error("Please enter OTP.");
       return;
     }
-    
-    if (!/^\d{6}$/.test(code)) { 
+
+    if (!/^\d{6}$/.test(code)) {
       toast.error("OTP must be exactly 6 digits.");
       return;
-    }    
+    }
 
     try {
       const res = await axios.post("http://localhost:5000/2fa/verify-2fa", {
@@ -71,22 +72,26 @@ const Verify2FA = () => {
       <ToastContainer />
       <div className="otp-container">
         <h2>Enter OTP</h2>
+
         {loading ? (
           <p>Loading QR Code...</p>
+        ) : is2FAEnabled ? (
+          <div className="qr-placeholder">2FA Enabled</div>
         ) : qrCode ? (
           <img src={qrCode} alt="QR Code" className="qr-code" />
         ) : (
           <p>QR Code not available</p>
         )}
-        <h1>
-          Use Google Authenticator App to scan the QR code above and enter the OTP .
-        </h1>
+
+        <h1>Use Google Authenticator to scan the QR code (only for first time users) and enter the OTP.</h1>
+
         <input
           type="text"
           placeholder="Enter OTP"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           className="otp-input"
+          maxLength="6"
         />
         <button onClick={handleVerify} className="otp-button">
           Verify & Login
