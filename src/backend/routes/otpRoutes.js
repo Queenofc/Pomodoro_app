@@ -72,27 +72,47 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-
 router.post("/verify-otp", async (req, res) => {
-  const { email, otp } = req.body;
-  if (!otp || !/\d{6}/.test(otp)) {
-    return res.status(400).json({ error: "Invalid OTP format" });
-  }
-
   try {
+    const { email, otp } = req.body;
+
+    // Check if OTP exists in the store
     const tempData = otpStore.get(email);
-    if (!tempData || tempData.otp !== otp || new Date(tempData.otpExpiresAt) < new Date()) {
-      return res.status(400).json({ error: "Invalid OTP" });
+    if (!tempData || !tempData.otp) {
+      return res.status(400).json({ error: "No OTP found. Please request a new OTP." });
     }
 
+    // Ensure OTP is not empty
+    if (!tempData.otp || tempData.otp.trim() === "") {
+      return res.status(400).json({ error: "OTP is required" });
+    }
+
+    // Validate OTP format and length
+    if (!/^\d+$/.test(tempData.otp) || tempData.otp.length !== 6) {
+      return res.status(400).json({ error: "Invalid OTP format. OTP must be exactly 6 digits and contain only numbers." });
+    }
+
+    // Compare OTP
+    if (tempData.otp !== otp) {
+      return res.status(400).json({ error: "Incorrect OTP . Please login once again." });
+    }
+
+    if (new Date(tempData.otpExpiresAt) < new Date()) {
+      return res.status(400).json({ error: "OTP has expired. Please login again." });
+    }
+
+    // Check if the email is already registered
+    const existingUser = await User.findOne({ email: tempData.userData.email });
+    if (existingUser) {
+      return res.status(400).json({ error: "Email is already registered. Please log in instead." });
+    }
+
+    // Hash the password before saving the user
     const hashedPassword = await bcrypt.hash(tempData.userData.password, 10);
 
     const newUser = new User({
       email: tempData.userData.email,
       password: hashedPassword,
-      otp: tempData.otp,
-      otpExpiresAt: tempData.otpExpiresAt,
     });
 
     await newUser.save();
@@ -100,7 +120,8 @@ router.post("/verify-otp", async (req, res) => {
 
     res.json({ success: true, message: "OTP verified. Registration complete." });
   } catch (error) {
-    res.status(500).json({ error: "Server error", details: error.message });
+    console.error("OTP Verification Error:", error);
+    res.status(500).json({ error: "Internal server error. Please try again later." });
   }
 });
 

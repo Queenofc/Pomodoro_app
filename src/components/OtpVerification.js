@@ -1,11 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "./music.css";
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
+  const [email, setEmail] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail");
+    if (storedEmail) {
+      setEmail(storedEmail);
+    } else {
+      toast.error("No email found. Please register again.");
+    }
+  }, []);
 
   const handleOtpChange = (e) => {
     let value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
@@ -16,35 +26,25 @@ const OtpVerification = () => {
 
   const handleOtpSubmit = async () => {
     try {
-      const email = localStorage.getItem("userEmail");
-
-      if (!email) {
-        throw new Error("No email found. Please register again.");
-      }
-
-      if (!/^\d{6}$/.test(otp)) {
-        throw new Error("Invalid OTP! Enter exactly 6 numeric digits.");
-      }
-
       const response = await fetch("http://localhost:5000/otp/verify-otp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
       });
-
+  
       const data = await response.json();
-
-      if (data?.success) {
-        toast.success("OTP verified successfully!", { autoClose: 3000 });
+  
+      if (response.ok && data?.success) {
+        toast.success("OTP verified successfully!", { autoClose: 2000 });
         setTimeout(() => navigate("/login"), 2000);
       } else {
-        throw new Error(data?.error ?? "OTP verification failed.");
+        throw new Error(data?.error || "OTP verification failed.");
       }
     } catch (err) {
-      console.error("Error:", err.message);
-      toast.error(err.message, { autoClose: 3000 });
+      toast.error(err.message || "Something went wrong. Please try again.");
     }
   };
+  
 
   return (
     <div className="otp-page">
@@ -63,6 +63,9 @@ const OtpVerification = () => {
         <button className="otp-button" onClick={handleOtpSubmit} disabled={otp.length !== 6}>
           Verify OTP
         </button>
+        <p>
+        <a href="/register">⬅ Back to Register</a>
+      </p>
       </div>
     </div>
   );

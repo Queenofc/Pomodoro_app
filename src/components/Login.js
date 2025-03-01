@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import { useAuth } from "../AuthContext"; // ✅ Import AuthContext
+import { useAuth } from "../AuthContext";
+import { toast, ToastContainer } from "react-toastify";
 import "./music.css";
 
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth(); // ✅ Use global login function
+  const { login } = useAuth();
 
   const handleCaptcha = (value) => {
     setCaptchaVerified(!!value);
   };
 
   const handleLogin = async () => {  
-    if (!userData || !userData.email || !userData.password) {
-      setError("Please enter both email and password.");
+    if (!userData.email || !userData.password) {
+      toast.error("Please enter both email and password.");
       return;
     }
   
@@ -39,14 +39,17 @@ const Login = () => {
         navigate("/verify", { state: { email: userData.email } });
       } else {
         login(data.token);
-        navigate("/home"); // Redirect to home
+        toast.success("Login successful! Redirecting...");
+        setTimeout(() => navigate("/home"), 2000);
       }
     } catch (err) {
-      setError(err.message || "Server error. Please try again.");
+      toast.error(err.message || "Server error. Please try again.");
     }
   };
   
   return (
+        <div className="otp-page">
+          <ToastContainer />
     <div className="login">
       <h2>Login</h2>
       <input
@@ -70,13 +73,13 @@ const Login = () => {
       <div className="captcha-container">
         <ReCAPTCHA sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY} onChange={handleCaptcha} />
       </div>
-      {error && <p className="error-message">{error}</p>}
       <button onClick={handleLogin} disabled={!captchaVerified}>
         Login
       </button>
       <p>
         No account? <a href="/register">Register here</a>
       </p>
+    </div>
     </div>
   );
 };

@@ -442,7 +442,7 @@ button:hover {
 
 .login p {
   font-weight: bold;
-  font-size: 15px;
+  font-size: 17px;
   margin-top: 15px;
 }
 
@@ -541,7 +541,7 @@ button:hover {
 
 .register-container p {
   margin-top: 15px;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: bold;
 }
 
@@ -665,16 +665,27 @@ button:hover {
 }
 
 .otp-container h1 {
-  font-size: 15px;
-  margin: 10px 15px ;
+  text-align: justify;
+  max-width: 85%;
+  font-size: 17px;
+  margin: 10px 25px ;
 }
 
 .otp-container p {
+  text-align: justify;
+  font-size: 17px;
   margin: 20px;
-  max-width: 90%;
-  font-size: 15px;
   font-weight: bold;
+  max-width: 90%;
   margin-bottom: 15px;
+}
+.otp-container a {
+  color: #ffd700;
+  text-decoration: none;
+}
+.otp-container a:hover {
+  text-decoration: none;
+  color: #ffea00;
 }
 
 .otp-input {
