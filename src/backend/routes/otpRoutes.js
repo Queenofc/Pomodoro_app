@@ -79,7 +79,7 @@ router.post("/verify-otp", async (req, res) => {
     // Check if OTP exists in the store
     const tempData = otpStore.get(email);
     if (!tempData || !tempData.otp) {
-      return res.status(400).json({ error: "No OTP found. Please request a new OTP." });
+      return res.status(400).json({ error: "No OTP found. Please login again." });
     }
 
     // Ensure OTP is not empty

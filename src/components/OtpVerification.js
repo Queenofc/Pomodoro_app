@@ -25,6 +25,14 @@ const OtpVerification = () => {
   };
 
   const handleOtpSubmit = async () => {
+    if (!otp) {
+      toast.warn("Please enter the OTP.");
+      return;
+    }
+    if (otp.length!==6) {
+      toast.warn("OTP must be 6 digits long.");
+      return;
+    }
     try {
       const response = await fetch("http://localhost:5000/otp/verify-otp", {
         method: "POST",
@@ -60,7 +68,7 @@ const OtpVerification = () => {
           onChange={handleOtpChange}
           maxLength={6}
         />
-        <button className="otp-button" onClick={handleOtpSubmit} disabled={otp.length !== 6}>
+        <button className="otp-button" onClick={handleOtpSubmit}>
           Verify OTP
         </button>
         <p>
