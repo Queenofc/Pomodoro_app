@@ -13,10 +13,10 @@ const moodColors = {
 
 const Home = () => {
   const [stopMusicTrigger, setStopMusicTrigger] = useState(false);
-  const [trailColor, setTrailColor] = useState("#ffd700");
+  const [trailColor, setTrailColor] = useState("#ff4500");
 
   const handleMoodChange = (selectedMood) => {
-    setTrailColor(moodColors[selectedMood] || "#ffd700");
+    setTrailColor(moodColors[selectedMood] || "#ff4500");
   };
 
   useEffect(() => {

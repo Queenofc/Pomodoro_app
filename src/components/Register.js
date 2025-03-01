@@ -69,7 +69,6 @@ const Register = () => {
   return (
     <div className="register-page">
       <ToastContainer />
-
       <div className="register-container">
         <h2>Register</h2>
         <input

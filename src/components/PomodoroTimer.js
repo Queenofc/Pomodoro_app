@@ -6,6 +6,7 @@ import power from "../images/power.png";
 import logo from "../images/logo.png";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import { toast, ToastContainer } from "react-toastify";
 
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const [time, setTime] = useState(() => {
@@ -105,7 +106,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       (name === "minutes" && (numericValue < 0 || numericValue > 59)) ||
       (name === "seconds" && (numericValue < 0 || numericValue > 59))
     ) {
-      alert("Enter a valid time period!");
+      toast.error("Enter a valid time period!", { autoClose: 3000 });
       numericValue = 0;
     }
     setCustomTime((prev) => ({ ...prev, [name]: numericValue }));
@@ -137,11 +138,13 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       logout(); // Clears token and sets isAuthenticated to false
       navigate("/login");
     } catch (error) {
-      console.error("❌ Logout failed:", error);
+      toast.error("Logout failed", { autoClose: 3000 });
     }
   };
 
   return (
+    <div className="mainpage">
+    <ToastContainer />
     <div className={`container ${isDarkMode ? "dark" : "light"}`}>
       <div className="topbar">
         <button className="logoutbutton"onClick={handleLogout}>
@@ -209,6 +212,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
         <button onClick={stopTimer}>Stop Timer</button>
         <button onClick={resetTimer}>Reset</button>
       </div>
+    </div>
     </div>
   );
 };
