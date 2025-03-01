@@ -19,6 +19,7 @@ body {
   gap: 10px; /* Adjust spacing between logo and text */
   text-align: center;
   margin-bottom: 25px;
+  padding-top: 45px;
 }
 
 .title img {
@@ -116,11 +117,22 @@ body {
   color: #ffffff;
 }
 
+.topbar {
+  display: flex;
+  align-items: center; /* Aligns items vertically */
+  justify-content: flex-end; /* Pushes items to the right */
+  padding: 15px 15px; /* Adjusts spacing */
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%; /* Ensures it spans the top */
+}
+
+.topbar button {
+  margin-left: 20px; /* Adds spacing between buttons */
+}
 /* 🎛️ Theme Toggle */
 .theme-toggle {
-  position: absolute;
-  top: 25px;
-  right: 15px;
   width: 40px; /* Fixed width */
   height: 40px; /* Fixed height */
   display: flex;
@@ -141,8 +153,8 @@ body {
 }
 
 .dark-mode .theme-toggle img {
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
 }
 
 /* 🎵 Music Player Container */
@@ -284,6 +296,48 @@ button:hover {
 
 .dark-mode button:hover {
   color: #ffd700;
+}
+
+.logoutbutton {
+  font-family: "PT Sans Narrow", sans-serif;
+  background-color: transparent;
+  color: #ff8c00;
+  font-weight: bold;
+  border: none;
+  padding: 10px 15px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 25px;
+  font-size: 18px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  box-shadow: 1px 3px 15px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between icon and text */
+}
+
+/* 🔄 Button Hover */
+.logoutbutton:hover {
+  color: #ffd700;
+}
+
+/* 🌙 Dark Mode Buttons */
+.dark-mode .logoutbutton {
+  background-color: transparent;
+  color: #ff8c00;
+  padding: 10px 15px;
+  box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+.dark-mode .logoutbutton:hover {
+  color: #ffd700;
+}
+
+/* 📌 Logout Icon Styling */
+.topbar .logoutbutton img{
+  width: 28px; /* Adjust icon size */
+  height: 28px;
+  transition: transform 0.3s ease;
 }
 
 /* 🎨 Mood-Based Cursor Trail */
@@ -431,6 +485,7 @@ button:hover {
 }
 
 .login button:hover {
+  color:black;
   text-align: center;
   background: #ffea00;
 }
@@ -521,7 +576,8 @@ button:hover {
   border: 2px solid white;
 }
 
-.register-container button {
+.register-container button ,
+.dark-mode .register-container button{
   width: 85%;
   padding: 12px;
   background: #ffd700;
@@ -535,8 +591,10 @@ button:hover {
   transition: background 0.3s, color 0.3s;
 }
 
-.register-container button:hover {
+.register-container button:hover ,
+.dark-mode .register-container button:hover{
   background: yellow;
+  color: #222;
 }
 
 .register-container p {
@@ -624,7 +682,8 @@ button:hover {
 .register-container {
   width: 75%;
 }
-.register-container button {
+.register-container button ,
+.dark-mode .register-container button {
   width: 86%;
   padding: 12px;
   background: #ffd700;
@@ -638,8 +697,10 @@ button:hover {
   transition: background 0.3s, color 0.3s;
 }
 
-.register-container button:hover {
+.register-container button:hover ,
+.dark-mode .register-container button:hover{
   background: yellow;
+    color: #222;
 }
 }
 
@@ -703,7 +764,8 @@ button:hover {
   border: 2px solid white;
 }
 
-.otp-button {
+.otp-button,
+.dark-mode .otp-button {
   width: 87%;
   padding: 12px;
   background: #ffd700;
@@ -717,7 +779,8 @@ button:hover {
   transition: background 0.3s, color 0.3s;
 }
 
-.otp-button:hover {
+.otp-button:hover , 
+.dark-mode .otp-button:hover {
   color: #222;
   background: yellow;
 }

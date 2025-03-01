@@ -2,7 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import "./music.css";
 import sunIcon from "../images/sun.png"; // Light mode icon
 import moonIcon from "../images/moon.png"; // Dark mode icon
+import power from "../images/power.png"; 
 import logo from "../images/logo.png";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const [time, setTime] = useState(() => {
@@ -11,12 +14,20 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const [isActive, setIsActive] = useState(() => {
     return localStorage.getItem("isTimerActive") === "true";
   });
-  const [customTime, setCustomTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [customTime, setCustomTime] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return localStorage.getItem("darkMode") === "true";
   });
+  const { logout } = useAuth(); // ✅ Get user from context
+  const navigate = useNavigate();
 
-  const alarmSound = useRef(new Audio("https://www.fesliyanstudios.com/play-mp3/4387"));
+  const alarmSound = useRef(
+    new Audio("https://www.fesliyanstudios.com/play-mp3/4387")
+  );
 
   useEffect(() => {
     if (isDarkMode) {
@@ -89,9 +100,11 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const handleCustomTimeChange = (event) => {
     const { name, value } = event.target;
     let numericValue = parseInt(value, 10) || 0;
-    if ((name === "hours" && (numericValue < 0 || numericValue > 23)) ||
-        (name === "minutes" && (numericValue < 0 || numericValue > 59)) ||
-        (name === "seconds" && (numericValue < 0 || numericValue > 59))) {
+    if (
+      (name === "hours" && (numericValue < 0 || numericValue > 23)) ||
+      (name === "minutes" && (numericValue < 0 || numericValue > 59)) ||
+      (name === "seconds" && (numericValue < 0 || numericValue > 59))
+    ) {
       alert("Enter a valid time period!");
       numericValue = 0;
     }
@@ -99,7 +112,8 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   };
 
   const applyCustomTime = () => {
-    const totalSeconds = customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
+    const totalSeconds =
+      customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
     if (totalSeconds > 0) {
       setTime(totalSeconds);
       localStorage.setItem("remainingTime", totalSeconds);
@@ -113,12 +127,31 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       return newMode;
     });
   };
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:5000/auth/logout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      logout(); // Clears token and sets isAuthenticated to false
+      navigate("/login");
+    } catch (error) {
+      console.error("❌ Logout failed:", error);
+    }
+  };
 
   return (
     <div className={`container ${isDarkMode ? "dark" : "light"}`}>
-      <button className="theme-toggle" onClick={toggleTheme}>
-        <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon" />
-      </button>
+      <div className="topbar">
+        <button className="logoutbutton"onClick={handleLogout}>
+          <img src={power} alt="" width="25" height="25" />
+          Logout
+        </button>
+        <button className="theme-toggle" onClick={toggleTheme}>
+          <img src={isDarkMode ? sunIcon : moonIcon} alt="Theme Icon" />
+        </button>
+      </div>
       <div className="title">
         <img src={logo} alt="" />
         <h1>Chill With Pomodoro</h1>
@@ -130,7 +163,9 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       </h2>
 
       <select onChange={handlePresetChange} defaultValue="">
-        <option value="" disabled>Select Timer</option>
+        <option value="" disabled>
+          Select Timer
+        </option>
         <option value="60">1 min</option>
         <option value="300">5 min</option>
         <option value="1500">25 min</option>
@@ -139,11 +174,32 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
 
       <div className="custom-time">
         <label>Hours:</label>
-        <input type="number" name="hours" min="0" max="23" value={customTime.hours || ""} onChange={handleCustomTimeChange} />
+        <input
+          type="number"
+          name="hours"
+          min="0"
+          max="23"
+          value={customTime.hours || ""}
+          onChange={handleCustomTimeChange}
+        />
         <label>Minutes:</label>
-        <input type="number" name="minutes" min="0" max="59" value={customTime.minutes || ""} onChange={handleCustomTimeChange} />
+        <input
+          type="number"
+          name="minutes"
+          min="0"
+          max="59"
+          value={customTime.minutes || ""}
+          onChange={handleCustomTimeChange}
+        />
         <label>Seconds:</label>
-        <input type="number" name="seconds" min="0" max="59" value={customTime.seconds || ""} onChange={handleCustomTimeChange} />
+        <input
+          type="number"
+          name="seconds"
+          min="0"
+          max="59"
+          value={customTime.seconds || ""}
+          onChange={handleCustomTimeChange}
+        />
         <button onClick={applyCustomTime}>Set</button>
       </div>
 

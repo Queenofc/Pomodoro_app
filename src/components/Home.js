@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../AuthContext"; 
 import PomodoroTimer from "./PomodoroTimer";
 import MusicPlayer from "./MusicPlayer";
-import { useNavigate } from "react-router-dom";
 import "./music.css";
 
 const moodColors = {
@@ -16,8 +14,6 @@ const moodColors = {
 const Home = () => {
   const [stopMusicTrigger, setStopMusicTrigger] = useState(false);
   const [trailColor, setTrailColor] = useState("#ffd700");
-  const {logout } = useAuth(); // ✅ Get user from context
-  const navigate = useNavigate();
 
   const handleMoodChange = (selectedMood) => {
     setTrailColor(moodColors[selectedMood] || "#ffd700");
@@ -53,26 +49,9 @@ const Home = () => {
       document.removeEventListener("mousemove", createTrail);
     };
   }, [trailColor]);
-
-  const handleLogout = async () => {
-    try {
-      await fetch("http://localhost:5000/auth/logout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-  
-      logout(); // Clears token and sets isAuthenticated to false
-      navigate("/login"); 
-    } catch (error) {
-      console.error("❌ Logout failed:", error);
-    }
-  };
-  
   
   return (
     <div>
-      <h1>Welcome to Pomodoro & Music Player</h1>
-      <button onClick={handleLogout}>Logout</button>
       <PomodoroTimer setStopMusicTrigger={setStopMusicTrigger} />
       <MusicPlayer stopMusicTrigger={stopMusicTrigger} onMoodChange={handleMoodChange} />
     </div>
