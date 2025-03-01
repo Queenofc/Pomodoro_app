@@ -1,76 +1,72 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "./music.css";
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
-  const [error, setError] = useState("");
-  const [email, setEmail] = useState(""); // Store user's email
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Retrieve email from localStorage (or sessionStorage, Redux, etc.)
-    const storedEmail = localStorage.getItem("userEmail");
-    if (storedEmail) {
-      setEmail(storedEmail);
-    } else {
-      setError("No email found. Please register again.");
-    }
-  }, []);
-
   const handleOtpChange = (e) => {
-    const value = e.target.value;
-
-    // Allow only numbers and limit to 6 digits
-    if (/^\d{0,6}$/.test(value)) {
+    let value = e.target.value.replace(/\D/g, ""); // Allow only numbers
+    if (value.length <= 6) {
       setOtp(value);
-      setError(""); // Clear error when valid input is entered
-    } else {
-      setError("OTP must be a 6-digit number.");
     }
   };
 
   const handleOtpSubmit = async () => {
-    if (otp.length !== 6) {
-      setError("OTP must be exactly 6 digits.");
+    const email = localStorage.getItem("userEmail");
+  
+    if (!email) {
+      toast.error("No email found. Please register again.", { autoClose: 3000 });
       return;
     }
-
+  
+    if (otp.length !== 6) {
+      toast.error("OTP must be exactly 6 digits.", { autoClose: 3000 });
+      return;
+    }
+  
     try {
       const response = await fetch("http://localhost:5000/otp/verify-otp", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, otp }), // Use actual email
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp }),
       });
-
+  
       const data = await response.json();
-
-      if (data.success) {
-        navigate("/login"); // Redirect after success
+      console.log(data); // Debugging: Check the response structure
+  
+      if (data?.success) {
+        toast.success("OTP verified successfully!", { autoClose: 3000 });
+        setTimeout(() => navigate("/login"), 2000);
       } else {
-        setError(data.error || "OTP verification failed.");
+        toast.error(data?.error ?? "OTP verification failed.", { autoClose: 3000 });
       }
     } catch (err) {
-      setError("Server error. Please try again.");
+      console.error("Fetch error:", err);
+      toast.error("Server error. Please try again.", { autoClose: 3000 });
     }
   };
-
+  
   return (
-    <div className="otp-container">
-      <h2>OTP Verification</h2>
-      <p>Enter the OTP sent to your registered email: <strong>{email}</strong></p>
-      <input
-        type="text"
-        placeholder="Enter OTP"
-        className="otp-input"
-        value={otp}
-        onChange={handleOtpChange}
-      />
-      {error && <p className="error-message">{error}</p>}
-      <button className="otp-button" onClick={handleOtpSubmit} disabled={otp.length !== 6}>
-        Verify OTP
-      </button>
+    <div className="otp-page">
+      <ToastContainer />
+      <div className="otp-container">
+        <h2>OTP Verification</h2>
+        <p>Enter the OTP sent to your registered email.</p>
+        <input
+          type="text"
+          placeholder="Enter OTP"
+          className="otp-input"
+          value={otp}
+          onChange={handleOtpChange}
+          maxLength={6}
+        />
+        <button className="otp-button" onClick={handleOtpSubmit} disabled={otp.length !== 6}>
+          Verify OTP
+        </button>
+      </div>
     </div>
   );
 };

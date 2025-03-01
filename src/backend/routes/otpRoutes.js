@@ -13,8 +13,27 @@ const otpStore = new Map();
 router.post("/register", async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !/\S+@\S+\.\S+/.test(email) || password.length < 6) {
-    return res.status(400).json({ error: "Invalid email or password format" });
+  // Validate email format
+  if (!email || !/\S+@\S+\.\S+/.test(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  // Validate password using the function
+  const validatePassword = (password) => ({
+    length: password.length >= 8,
+    uppercase: /[A-Z]/.test(password),
+    lowercase: /[a-z]/.test(password),
+    number: /[0-9]/.test(password),
+    specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+  });
+
+  const passwordValidation = validatePassword(password);
+
+  if (!Object.values(passwordValidation).every(Boolean)) {
+    return res.status(400).json({ 
+      error: "Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.",
+      details: passwordValidation 
+    });
   }
 
   try {
@@ -52,6 +71,7 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: "Error sending OTP", details: error.message });
   }
 });
+
 
 
 router.post("/verify-otp", async (req, res) => {

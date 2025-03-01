@@ -555,6 +555,10 @@ button:hover {
   text-decoration: none;
   color: #ffea00;
 }
+.register-container button:disabled {
+  background: #c5c5c5;
+  cursor: not-allowed;
+}
 .password-container {
   width: 82%;
   display: flex;
@@ -610,8 +614,6 @@ button:hover {
 .password-validation .invalid {
   color:#D41F30; 
 }
-
-
 .password-validation span {
   margin-right: 8px;
   font-size: 18px;
@@ -725,5 +727,86 @@ button:hover {
   font-size: 20px;
   font-weight: bold;
 }
+/* Ensure Toast container is on top */
+.Toastify__toast-container {
+  z-index: 9999 !important; /* Ensures it's above other elements */
+}
 
+/* Toast Message */
+.Toastify__toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Ensures spacing between text and close button */
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: bold;
+  font-family: "PT Sans Narrow", sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  min-height: 48px; /* Ensure proper height */
+  min-width: 250px; /* Increase width slightly */
+  padding: 10px 20px !important; /* Add more padding for better spacing */
+  z-index: 10000 !important; /* Prevents other styles from affecting it */
+}
 
+/* Error Toast */
+.Toastify__toast--error {
+  background-color:  white;
+  color: #dc3545;
+}
+
+/* Close Button: Reset Styles to Prevent Inheritance */
+.Toastify__toast .Toastify__close-button,
+.Toastify__toast .Toastify__close-button--colored {
+  all: unset !important; /* Remove inherited styles */
+  color: #fff !important; /* White text */
+  opacity: 0.8 !important;
+  position: absolute !important; /* Position it properly */
+  right: 12px !important; /* Push it to the right */
+  top: 50% !important; /* Center it vertically */
+  transform: translateY(-50%) !important; /* Perfect vertical alignment */
+  cursor: pointer !important;
+  z-index: 10001 !important; /* Higher than Register button */
+  width: 28px !important; /* Slightly larger for easier click */
+  height: 28px !important; /* Adjust height */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(22, 21, 21, 0.2) !important; /* Slightly visible background */
+  border-radius: 50% !important; /* Make it round */
+  transition: opacity 0.2s ease-in-out, background 0.2s !important;
+}
+
+/* Override Button Styles That May Be Inherited */
+.Toastify__toast .Toastify__close-button,
+.Toastify__toast .Toastify__close-button--colored {
+  font-size: initial !important;
+  font-weight: normal !important;
+  text-transform: none !important;
+  padding: 0 !important;
+  border: none !important;
+  background: none !important;
+}
+
+/* Ensure Higher Specificity */
+.Toastify__toast-container .Toastify__toast .Toastify__close-button,
+.Toastify__toast-container .Toastify__toast .Toastify__close-button--colored {
+  all: unset !important;
+  color:#dc3545 !important;
+  cursor: pointer !important;
+}
+
+/* Close Button Hover Effect */
+.Toastify__toast .Toastify__close-button:hover,
+.Toastify__toast .Toastify__close-button--colored:hover {
+  opacity: 1 !important;
+  background: rgba(255, 255, 255, 0.4) !important; /* More visible on hover */
+}
+
+/* Adjust text spacing inside Toast */
+.Toastify__toast-body {
+  flex: 1; /* Ensures text takes available space */
+  padding-right: 35px !important; /* Adds space so text doesn't touch the close button */
+  line-height: 1.4; /* Increases readability */
+  word-wrap: break-word; /* Prevents text overflow */
+}
