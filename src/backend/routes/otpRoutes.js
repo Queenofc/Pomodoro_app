@@ -83,7 +83,7 @@ router.post("/verify-otp", async (req, res) => {
   try {
     const tempData = otpStore.get(email);
     if (!tempData || tempData.otp !== otp || new Date(tempData.otpExpiresAt) < new Date()) {
-      return res.status(400).json({ error: "Invalid or expired OTP" });
+      return res.status(400).json({ error: "Invalid OTP" });
     }
 
     const hashedPassword = await bcrypt.hash(tempData.userData.password, 10);
