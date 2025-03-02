@@ -392,6 +392,7 @@ button:hover {
   border: none;
   padding: 12px 24px;
   margin: 10px;
+  margin-bottom: 25px;
   cursor: pointer;
   border-radius: 25px;
   font-size: 18px;
