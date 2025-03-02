@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { ToastContainer, toast } from "react-toastify";
-import _ from "lodash";  // Import Lodash for debouncing
+import _ from "lodash"; // Import Lodash for debouncing
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
@@ -17,6 +17,7 @@ const Verify2FA = () => {
   const { email } = location.state || {};
   const { login } = useAuth();
   const debounceRef = useRef(null);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
     if (!email) {
@@ -27,7 +28,9 @@ const Verify2FA = () => {
 
     const fetchQRCode = async () => {
       try {
-        const res = await axios.post("http://localhost:5000/2fa/generate-qr", { email });
+        const res = await axios.post("http://localhost:5000/2fa/generate-qr", {
+          email,
+        });
         if (res.data.qrCode) {
           setQrCode(res.data.qrCode);
         } else {
@@ -37,11 +40,18 @@ const Verify2FA = () => {
         console.error("Error fetching QR Code:", err);
         toast.error("Failed to fetch QR Code. Try again.");
       } finally {
-        setTimeout(() => setLoading(false), 2000); // Delay before showing the page
+        timeoutRef.current = setTimeout(() => setLoading(false), 2000); // Store timeout ID
       }
     };
 
     fetchQRCode();
+
+    // ✅ Cleanup function to clear timeout
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [email, navigate]);
 
   // ✅ Wrap handleVerify in useCallback to prevent re-creation on every render
@@ -57,7 +67,10 @@ const Verify2FA = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/2fa/verify-2fa", { email, code });
+      const res = await axios.post("http://localhost:5000/2fa/verify-2fa", {
+        email,
+        code,
+      });
 
       if (res.data.success) {
         login(res.data.token);
@@ -86,7 +99,7 @@ const Verify2FA = () => {
       ) : (
         <div className="otp-container">
           <h2>Enter OTP</h2>
-          
+
           {is2FAEnabled ? (
             <div className="qr-placeholder">2FA Enabled</div>
           ) : qrCode ? (
@@ -95,7 +108,10 @@ const Verify2FA = () => {
             <p>QR Code not available</p>
           )}
 
-          <h1>Use Google Authenticator to scan the QR code (only for first-time users) and enter the OTP.</h1>
+          <h1>
+            Use Google Authenticator to scan the QR code (only for first-time
+            users) and enter the OTP.
+          </h1>
 
           <input
             type="text"

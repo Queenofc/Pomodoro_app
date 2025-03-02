@@ -13,7 +13,8 @@ const OtpVerification = () => {
   const debounceRef = useRef(null);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
