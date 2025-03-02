@@ -538,6 +538,11 @@ button:hover {
     width: 85%;
   }
 }
+@media (max-width: 400px) {
+  .captcha-container {
+    transform: scale(0.85);
+  }
+}
 
 
 /* Register.css */
