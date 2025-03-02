@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { ToastContainer, toast } from "react-toastify";
+import _ from "lodash";  // Import Lodash for debouncing
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
@@ -15,6 +16,7 @@ const Verify2FA = () => {
   const location = useLocation();
   const { email } = location.state || {};
   const { login } = useAuth();
+  const debounceRef = useRef(null);
 
   useEffect(() => {
     if (!email) {
@@ -42,7 +44,8 @@ const Verify2FA = () => {
     fetchQRCode();
   }, [email, navigate]);
 
-  const handleVerify = async () => {
+  // ✅ Wrap handleVerify in useCallback to prevent re-creation on every render
+  const handleVerify = useCallback(async () => {
     if (!email || !code) {
       toast.error("Please enter OTP.");
       return;
@@ -66,7 +69,12 @@ const Verify2FA = () => {
     } catch (err) {
       toast.error("Wrong OTP. Please try again.");
     }
-  };
+  }, [email, code, login, navigate]);
+
+  // ✅ Debounce handleVerify and store it in useRef (only once on mount)
+  useEffect(() => {
+    debounceRef.current = _.debounce(handleVerify, 500);
+  }, [handleVerify]);
 
   return (
     <div className="verifypage">
@@ -97,7 +105,7 @@ const Verify2FA = () => {
             className="otp-input"
             maxLength="6"
           />
-          <button onClick={handleVerify} className="otp-button">
+          <button onClick={() => debounceRef.current()} className="otp-button">
             Verify & Login
           </button>
         </div>
