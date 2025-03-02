@@ -164,9 +164,8 @@ body {
   border: 2px solid #ccc;
   border-radius: 25px;
   width: 350px;
-  min-height: 70vh;
   margin: auto;
-  margin-bottom: 100px;
+  margin-bottom: 10px;
   background: linear-gradient(
     135deg,
     #ff5400,
