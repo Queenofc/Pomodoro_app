@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
@@ -18,15 +19,12 @@ const Register = () => {
   });
 
   const navigate = useNavigate();
+  const debounceRef = useRef(null);
 
-  // Validate email
-  const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userData.email);
-  
   useEffect(() => {
-    setTimeout(() => setLoading(false), 2000); // 2 seconds delay before showing the page
+    setTimeout(() => setLoading(false), 2000);
   }, []);
 
-  // Validate password dynamically
   useEffect(() => {
     const { password } = userData;
     setPasswordCriteria({
@@ -38,17 +36,16 @@ const Register = () => {
     });
   }, [userData,userData.password]);
 
+  const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userData.email);
   const isPasswordValid = Object.values(passwordCriteria).every(Boolean);
   const isFormValid = isEmailValid && isPasswordValid;
 
-  // Handle input change
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle user registration
-  const handleRegister = async () => {
+  const handleRegister = useCallback(async () => {
     if (!isEmailValid) {
       toast.error("Please enter a valid email.", { autoClose: 3000 });
       return;
@@ -59,7 +56,7 @@ const Register = () => {
       return;
     }
 
-    setLoading(true); // Show loading indicator
+    setLoading(true);
 
     try {
       const response = await fetch("http://localhost:5000/otp/register", {
@@ -80,9 +77,14 @@ const Register = () => {
     } catch (err) {
       toast.error("Server error. Please try again.", { autoClose: 3000 });
     } finally {
-      setLoading(false); // Hide loading indicator
+      setLoading(false);
     }
-  };
+  }, [isEmailValid, isPasswordValid, userData, navigate]);
+
+  // Debounce the function only once on component mount
+  useEffect(() => {
+    debounceRef.current = _.debounce(handleRegister, 500);
+  }, [handleRegister]);
 
   return (
     <div className="register-page">
@@ -94,13 +96,7 @@ const Register = () => {
       ) : (
         <div className="register-container">
           <h2>Register</h2>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={userData.email}
-            onChange={handleInputChange}
-          />
+          <input type="email" name="email" placeholder="Email" value={userData.email} onChange={handleInputChange} />
 
           <div className="password-container">
             <input
@@ -138,9 +134,13 @@ const Register = () => {
             </div>
           )}
 
-          <button onClick={handleRegister} disabled={!isFormValid}>Register</button>
+          <button onClick={() => debounceRef.current()} disabled={!isFormValid}>
+            Register
+          </button>
 
-          <p>Already registered? <a href="/login">Login here</a></p>
+          <p>
+            Already registered? <a href="/login">Login here</a>
+          </p>
         </div>
       )}
     </div>

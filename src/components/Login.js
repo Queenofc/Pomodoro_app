@@ -1,53 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import ReCAPTCHA from "react-google-recaptcha";
+import _ from "lodash";
 import { useAuth } from "../AuthContext";
-import { toast, ToastContainer } from "react-toastify";
 import "./music.css";
-import loadingGif from "../images/loading.gif"; // Ensure the correct path
+import loadingGif from "../images/loading.gif";
 
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(true); // Initial loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { login } = useAuth();
+  const debounceRef = useRef(null);
 
-  // Simulate a preloading phase before showing the login form
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer); // Cleanup in case component unmounts
+    return () => clearTimeout(timer);
   }, []);
-  
 
   const handleCaptcha = (value) => {
     setCaptchaVerified(!!value);
   };
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
     if (!userData.email || !userData.password) {
       toast.error("Please enter both email and password.");
       return;
     }
-
-    setLoading(true); // Show loading while logging in
-
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: userData.email,
-          password: userData.password,
-        }),
+        body: JSON.stringify(userData),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
-      }
+      if (!response.ok) throw new Error(data.error || "Login failed");
 
       if (data.requires2FA) {
         navigate("/verify", { state: { email: userData.email } });
@@ -59,9 +51,13 @@ const Login = () => {
     } catch (err) {
       toast.error(err.message || "Server error. Please try again.");
     } finally {
-      setLoading(false); // Hide loading screen
+      setLoading(false);
     }
-  };
+  }, [userData, navigate, login]);
+
+  useEffect(() => {
+    debounceRef.current = _.debounce(handleLogin, 500);
+  }, [handleLogin]);
 
   return (
     <div className="otp-page">
@@ -77,9 +73,7 @@ const Login = () => {
             type="email"
             placeholder="Email"
             value={userData.email}
-            onChange={(e) =>
-              setUserData({ ...userData, email: e.target.value })
-            }
+            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
           />
           <div className="password-container">
             <input
@@ -87,14 +81,9 @@ const Login = () => {
               className="password-input"
               placeholder="Password"
               value={userData.password}
-              onChange={(e) =>
-                setUserData({ ...userData, password: e.target.value })
-              }
+              onChange={(e) => setUserData({ ...userData, password: e.target.value })}
             />
-            <span
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? "👁️" : "👁️‍🗨️"}
             </span>
           </div>
@@ -104,7 +93,7 @@ const Login = () => {
               onChange={handleCaptcha}
             />
           </div>
-          <button onClick={handleLogin} disabled={!captchaVerified}>
+          <button onClick={() => debounceRef.current()} disabled={!captchaVerified}>
             Login
           </button>
           <p>
