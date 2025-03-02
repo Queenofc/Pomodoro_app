@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import PomodoroTimer from "./PomodoroTimer";
 import MusicPlayer from "./MusicPlayer";
 import "./music.css";
+import loadingGif from "../images/loading.gif"; // Ensure correct path
 
 const moodColors = {
   Work: "#ff5733",
@@ -14,12 +15,24 @@ const moodColors = {
 const Home = () => {
   const [stopMusicTrigger, setStopMusicTrigger] = useState(false);
   const [trailColor, setTrailColor] = useState("#ff4500");
+  const [loading, setLoading] = useState(true);
 
   const handleMoodChange = (selectedMood) => {
     setTrailColor(moodColors[selectedMood] || "#ff4500");
   };
 
   useEffect(() => {
+    // Simulate a short loading delay
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+
     const createTrail = (event) => {
       if (document.querySelectorAll(".trail").length > 50) {
         document.querySelector(".trail").remove();
@@ -48,9 +61,13 @@ const Home = () => {
     return () => {
       document.removeEventListener("mousemove", createTrail);
     };
-  }, [trailColor]);
-  
-  return (
+  }, [trailColor, loading]);
+
+  return loading ? (
+    <div className="loading-container">
+      <img src={loadingGif} alt="Loading..." className="loading-gif" />
+    </div>
+  ) : (
     <div>
       <PomodoroTimer setStopMusicTrigger={setStopMusicTrigger} />
       <MusicPlayer stopMusicTrigger={stopMusicTrigger} onMoodChange={handleMoodChange} />

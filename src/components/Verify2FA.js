@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "./music.css";
+import loadingGif from "../images/loading.gif";
 
 const Verify2FA = () => {
   const [qrCode, setQrCode] = useState("");
@@ -22,21 +23,24 @@ const Verify2FA = () => {
       return;
     }
 
-    axios
-      .post("http://localhost:5000/2fa/generate-qr", { email })
-      .then((res) => {
+    const fetchQRCode = async () => {
+      try {
+        const res = await axios.post("http://localhost:5000/2fa/generate-qr", { email });
         if (res.data.qrCode) {
           setQrCode(res.data.qrCode);
         } else {
           setIs2FAEnabled(true);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Error fetching QR Code:", err);
         toast.error("Failed to fetch QR Code. Try again.");
-      })
-      .finally(() => setLoading(false));
-  }, [email, navigate, location.state]);
+      } finally {
+        setTimeout(() => setLoading(false), 2000); // Delay before showing the page
+      }
+    };
+
+    fetchQRCode();
+  }, [email, navigate]);
 
   const handleVerify = async () => {
     if (!email || !code) {
@@ -50,10 +54,7 @@ const Verify2FA = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/2fa/verify-2fa", {
-        email,
-        code,
-      });
+      const res = await axios.post("http://localhost:5000/2fa/verify-2fa", { email, code });
 
       if (res.data.success) {
         login(res.data.token);
@@ -70,33 +71,37 @@ const Verify2FA = () => {
   return (
     <div className="verifypage">
       <ToastContainer />
-      <div className="otp-container">
-        <h2>Enter OTP</h2>
+      {loading ? (
+        <div className="loading-container">
+          <img src={loadingGif} alt="Loading..." className="loading-gif" />
+        </div>
+      ) : (
+        <div className="otp-container">
+          <h2>Enter OTP</h2>
+          
+          {is2FAEnabled ? (
+            <div className="qr-placeholder">2FA Enabled</div>
+          ) : qrCode ? (
+            <img src={qrCode} alt="QR Code" className="qr-code" />
+          ) : (
+            <p>QR Code not available</p>
+          )}
 
-        {loading ? (
-          <p>Loading QR Code...</p>
-        ) : is2FAEnabled ? (
-          <div className="qr-placeholder">2FA Enabled</div>
-        ) : qrCode ? (
-          <img src={qrCode} alt="QR Code" className="qr-code" />
-        ) : (
-          <p>QR Code not available</p>
-        )}
+          <h1>Use Google Authenticator to scan the QR code (only for first-time users) and enter the OTP.</h1>
 
-        <h1>Use Google Authenticator to scan the QR code (only for first time users) and enter the OTP.</h1>
-
-        <input
-          type="text"
-          placeholder="Enter OTP"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="otp-input"
-          maxLength="6"
-        />
-        <button onClick={handleVerify} className="otp-button">
-          Verify & Login
-        </button>
-      </div>
+          <input
+            type="text"
+            placeholder="Enter OTP"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="otp-input"
+            maxLength="6"
+          />
+          <button onClick={handleVerify} className="otp-button">
+            Verify & Login
+          </button>
+        </div>
+      )}
     </div>
   );
 };
