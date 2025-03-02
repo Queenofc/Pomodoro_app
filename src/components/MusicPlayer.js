@@ -10,7 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 const moodData = {
   work: {
     title: "Simple Harmony",
-    url: "/audio/meditation.mp3",
+    url: "/audio/Idea10.mp3",
     color: "#40E0D0",
     image: work,
   },
