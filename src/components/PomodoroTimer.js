@@ -209,7 +209,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       <div className="controls">
         <button onClick={startTimer}>Start</button>
         <button onClick={pauseTimer}>Pause</button>
-        <button onClick={stopTimer}>Stop Timer</button>
+        <button onClick={stopTimer}>Mute Alarm</button>
         <button onClick={resetTimer}>Reset</button>
       </div>
     </div>
