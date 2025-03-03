@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { ToastContainer, toast } from "react-toastify";
-import _ from "lodash"; // Import Lodash for debouncing
+import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
@@ -12,12 +12,13 @@ const Verify2FA = () => {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(true);
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
   const { login } = useAuth();
-  const debounceRef = useRef(null);
   const timeoutRef = useRef(null);
+  const debouncedFnRef = useRef(null);
 
   useEffect(() => {
     if (!email) {
@@ -40,54 +41,71 @@ const Verify2FA = () => {
         console.error("Error fetching QR Code:", err);
         toast.error("Failed to fetch QR Code. Try again.");
       } finally {
-        timeoutRef.current = setTimeout(() => setLoading(false), 2000); // Store timeout ID
+        timeoutRef.current = setTimeout(() => setLoading(false), 2000);
       }
     };
 
     fetchQRCode();
 
-    // ✅ Cleanup function to clear timeout
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
+      if (debouncedFnRef.current) {
+        debouncedFnRef.current.cancel();
+      }
     };
   }, [email, navigate]);
 
-  // ✅ Wrap handleVerify in useCallback to prevent re-creation on every render
-  const handleVerify = useCallback(async () => {
-    if (!email || !code) {
-      toast.error("Please enter OTP.");
-      return;
-    }
-
-    if (!/^\d{6}$/.test(code)) {
-      toast.error("OTP must be exactly 6 digits.");
-      return;
-    }
-
-    try {
-      const res = await axios.post("http://localhost:5000/2fa/verify-2fa", {
-        email,
-        code,
-      });
-
-      if (res.data.success) {
-        login(res.data.token);
-        toast.success("OTP Verified. Logging in...");
-        setTimeout(() => navigate("/home"), 2000);
-      } else {
-        toast.error("Invalid OTP. Try again.");
-      }
-    } catch (err) {
-      toast.error("Wrong OTP. Please try again.");
-    }
-  }, [email, code, login, navigate]);
-
-  // ✅ Debounce handleVerify and store it in useRef (only once on mount)
   useEffect(() => {
-    debounceRef.current = _.debounce(handleVerify, 500);
-  }, [handleVerify]);
+    const handleVerify = async () => {
+      if (!email || !code) {
+        toast.error("Please enter OTP.");
+        return;
+      }
+
+      if (!/^\d{6}$/.test(code)) {
+        toast.error("OTP must be exactly 6 digits.");
+        return;
+      }
+
+      try {
+        const res = await axios.post("http://localhost:5000/2fa/verify-2fa", {
+          email,
+          code,
+        });
+
+        if (res.data.success) {
+          login(res.data.token);
+          setIsSubmitting(true); // Disable the button only after a successful submission.
+          toast.success("OTP Verified. Logging in...");
+          setTimeout(() => navigate("/home"), 2000);
+        } else {
+          toast.error("Invalid OTP. Try again.");
+        }
+      } catch (err) {
+        toast.error("Wrong OTP. Please try again.");
+      }
+    };
+
+    // Use lodash debounce for the handleVerify function.
+    debouncedFnRef.current = _.debounce(() => {
+      handleVerify();
+    }, 500);
+
+    const currentDebounce = debouncedFnRef.current;
+    return () => {
+      if (currentDebounce) {
+        currentDebounce.cancel();
+      }
+    };
+  }, [code, email, login, navigate]);
+
+  const handleButtonClick = () => {
+    if (debouncedFnRef.current) {
+      debouncedFnRef.current();
+    }
+  };
 
   return (
     <div className="verifypage">
@@ -109,8 +127,8 @@ const Verify2FA = () => {
           )}
 
           <h1>
-            Use Google Authenticator to scan the QR code (only for first-time
-            users) and enter the OTP.
+            Use Google Authenticator to scan the QR code (only for first-time users)
+            and enter the OTP.
           </h1>
 
           <input
@@ -121,8 +139,12 @@ const Verify2FA = () => {
             className="otp-input"
             maxLength="6"
           />
-          <button onClick={() => debounceRef.current()} className="otp-button">
-            Verify & Login
+          <button
+            onClick={handleButtonClick}
+            className="otp-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Verifying..." : "Verify & Login"}
           </button>
         </div>
       )}

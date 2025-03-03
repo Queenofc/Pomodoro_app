@@ -12,6 +12,7 @@ const Login = () => {
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [submitted, setSubmitted] = useState(false); // New state
   const navigate = useNavigate();
   const { login } = useAuth();
   const debounceRef = useRef(null);
@@ -31,6 +32,8 @@ const Login = () => {
       return;
     }
     setLoading(true);
+    setSubmitted(true); // Disable button after submission
+
     try {
       const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
@@ -50,6 +53,7 @@ const Login = () => {
       }
     } catch (err) {
       toast.error(err.message || "Server error. Please try again.");
+      setSubmitted(false); // Re-enable button on failure
     } finally {
       setLoading(false);
     }
@@ -74,6 +78,7 @@ const Login = () => {
             placeholder="Email"
             value={userData.email}
             onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            disabled={submitted}
           />
           <div className="password-container">
             <input
@@ -82,9 +87,10 @@ const Login = () => {
               placeholder="Password"
               value={userData.password}
               onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+              disabled={submitted}
             />
             <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? "👁️" : "👁️‍🗨️"}
+              {showPassword ? "🔓":"🔒"}
             </span>
           </div>
           <div className="captcha-container">
@@ -93,8 +99,11 @@ const Login = () => {
               onChange={handleCaptcha}
             />
           </div>
-          <button onClick={() => debounceRef.current()} disabled={!captchaVerified}>
-            Login
+          <button 
+            onClick={() => debounceRef.current()} 
+            disabled={!captchaVerified || submitted}
+          >
+            {submitted ? "Logging in..." : "Login"}
           </button>
           <p>
             No account? <a href="/register">Register here</a>

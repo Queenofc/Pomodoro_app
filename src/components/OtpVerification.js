@@ -9,6 +9,7 @@ const OtpVerification = () => {
   const [otp, setOtp] = useState("");
   const [email, setEmail] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false); 
   const navigate = useNavigate();
   const debounceRef = useRef(null);
 
@@ -55,6 +56,7 @@ const OtpVerification = () => {
 
       if (response.ok && data?.success) {
         toast.success("OTP verified successfully!", { autoClose: 2000 });
+        setIsSubmitted(true); // Disable further submissions on success
         setTimeout(() => navigate("/login"), 2000);
       } else {
         throw new Error(data?.error || "OTP verification failed.");
@@ -89,12 +91,11 @@ const OtpVerification = () => {
             value={otp}
             onChange={handleOtpChange}
             maxLength={6}
-            disabled={loading}
           />
           <button
             className="otp-button"
             onClick={() => debounceRef.current()}
-            disabled={loading}
+            disabled={isSubmitted}  // Button is disabled only after a successful submission
           >
             {loading ? "Verifying..." : "Verify OTP"}
           </button>

@@ -1,7 +1,7 @@
 /* 🌟 General Styles */
 @import url("https://fonts.googleapis.com/css2?family=PT+Sans+Narrow&display=swap");
 :root {
-  --trail-color:#ff4500; /* Default Golden Glow */
+  --trail-color: #ff4500; 
   max-width: 100vw;
   min-height: 100vh;
 }
@@ -333,7 +333,7 @@ button:hover {
 }
 
 /* 📌 Logout Icon Styling */
-.topbar .logoutbutton img{
+.topbar .logoutbutton img {
   width: 28px; /* Adjust icon size */
   height: 28px;
   transition: transform 0.3s ease;
@@ -393,7 +393,7 @@ button:hover {
   padding: 12px 24px;
   margin: 10px;
   margin-bottom: 25px;
-    cursor: pointer;
+  cursor: pointer;
   border-radius: 25px;
   font-size: 18px;
   transition: background 0.3s ease, transform 0.2s ease;
@@ -485,7 +485,7 @@ button:hover {
 }
 
 .login button:hover {
-  color:black;
+  color: black;
   text-align: center;
   background: #ffea00;
 }
@@ -544,7 +544,6 @@ button:hover {
   }
 }
 
-
 /* Register.css */
 .register-container {
   width: 350px;
@@ -581,8 +580,8 @@ button:hover {
   border: 2px solid white;
 }
 
-.register-container button ,
-.dark-mode .register-container button{
+.register-container button,
+.dark-mode .register-container button {
   width: 85%;
   padding: 12px;
   background: #ffd700;
@@ -596,8 +595,8 @@ button:hover {
   transition: background 0.3s, color 0.3s;
 }
 
-.register-container button:hover ,
-.dark-mode .register-container button:hover{
+.register-container button:hover,
+.dark-mode .register-container button:hover {
   background: yellow;
   color: #222;
 }
@@ -628,13 +627,13 @@ button:hover {
   align-items: center;
   background: white;
   border-radius: 5px;
-  padding-left:12px;
+  padding-left: 12px;
   margin: 10px auto;
   border: none;
 }
 .password-container input.password-input {
   flex: 1;
-  margin:-12px;
+  margin: -12px;
   height: 5px;
   margin-right: 2px;
   border: none !important;
@@ -671,11 +670,11 @@ button:hover {
 }
 
 .password-validation .valid {
-  color:#A4FF2A;
+  color: #a4ff2a;
 }
 
 .password-validation .invalid {
-  color:#D41F30; 
+  color: #d41f30;
 }
 .password-validation span {
   margin-right: 8px;
@@ -684,29 +683,29 @@ button:hover {
 
 /* Responsive */
 @media (max-width: 500px) {
-.register-container {
-  width: 75%;
-}
-.register-container button ,
-.dark-mode .register-container button {
-  width: 86%;
-  padding: 12px;
-  background: #ffd700;
-  color: #222;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: background 0.3s, color 0.3s;
-}
-
-.register-container button:hover ,
-.dark-mode .register-container button:hover{
-  background: yellow;
+  .register-container {
+    width: 75%;
+  }
+  .register-container button,
+  .dark-mode .register-container button {
+    width: 86%;
+    padding: 12px;
+    background: #ffd700;
     color: #222;
-}
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  .register-container button:hover,
+  .dark-mode .register-container button:hover {
+    background: yellow;
+    color: #222;
+  }
 }
 
 .otp-container {
@@ -718,7 +717,7 @@ button:hover {
   text-align: center;
   font-family: "PT Sans Narrow", sans-serif;
   color: white;
-  
+
   position: absolute;
   top: 50%;
   left: 50%;
@@ -734,7 +733,7 @@ button:hover {
   text-align: justify;
   max-width: 85%;
   font-size: 17px;
-  margin: 10px 25px ;
+  margin: 10px 25px;
 }
 
 .otp-container p {
@@ -783,13 +782,16 @@ button:hover {
   margin-top: 15px;
   transition: background 0.3s, color 0.3s;
 }
-
-.otp-button:hover , 
+.otp-button:hover,
 .dark-mode .otp-button:hover {
   color: #222;
   background: yellow;
 }
-
+.otp-button:disabled,
+.dark-mode .otp-button:disabled {
+  background: #c5c5c5;
+  cursor: not-allowed;
+}
 /* Responsive */
 @media (max-width: 500px) {
   .otp-container {
@@ -832,7 +834,7 @@ button:hover {
 
 /* Error Toast */
 .Toastify__toast--error {
-  background-color:  white;
+  background-color: white;
   color: #dc3545;
 }
 
@@ -853,7 +855,12 @@ button:hover {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(22, 21, 21, 0.2) !important; /* Slightly visible background */
+  background: rgba(
+    22,
+    21,
+    21,
+    0.2
+  ) !important; /* Slightly visible background */
   border-radius: 50% !important; /* Make it round */
   transition: opacity 0.2s ease-in-out, background 0.2s !important;
 }
@@ -873,7 +880,7 @@ button:hover {
 .Toastify__toast-container .Toastify__toast .Toastify__close-button,
 .Toastify__toast-container .Toastify__toast .Toastify__close-button--colored {
   all: unset !important;
-  color:#dc3545 !important;
+  color: #dc3545 !important;
   cursor: pointer !important;
 }
 

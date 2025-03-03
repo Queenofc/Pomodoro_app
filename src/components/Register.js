@@ -10,6 +10,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isPasswordFocused, setIsPasswordFocused] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false); // Track registration status
   const [passwordCriteria, setPasswordCriteria] = useState({
     length: false,
     uppercase: false,
@@ -24,7 +25,7 @@ const Register = () => {
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 2000);
     return () => clearTimeout(timer);
-  }, []); 
+  }, []);
 
   useEffect(() => {
     const { password } = userData;
@@ -35,7 +36,7 @@ const Register = () => {
       number: /[0-9]/.test(password),
       specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
     });
-  }, [userData,userData.password]);
+  }, [userData, userData.password]);
 
   const isEmailValid = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userData.email);
   const isPasswordValid = Object.values(passwordCriteria).every(Boolean);
@@ -71,6 +72,7 @@ const Register = () => {
       if (data.success) {
         toast.success("Registration successful! Redirecting...", { autoClose: 3000 });
         localStorage.setItem("userEmail", userData.email);
+        setIsRegistered(true); // Disable button after success
         setTimeout(() => navigate("/otp"), 2000);
       } else {
         toast.error(data.error || "Registration failed.", { autoClose: 3000 });
@@ -81,7 +83,6 @@ const Register = () => {
       setLoading(false);
     }
   }, [isEmailValid, isPasswordValid, userData, navigate]);
-
   // Debounce the function only once on component mount
   useEffect(() => {
     debounceRef.current = _.debounce(handleRegister, 500);
@@ -111,7 +112,7 @@ const Register = () => {
               className="password-input"
             />
             <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? "👁️" : "👁️‍🗨️"}
+              {showPassword ? "🔓":"🔒"}
             </span>
           </div>
 
@@ -135,8 +136,8 @@ const Register = () => {
             </div>
           )}
 
-          <button onClick={() => debounceRef.current()} disabled={!isFormValid}>
-            Register
+          <button onClick={() => debounceRef.current()} disabled={!isFormValid || isRegistered}>
+            {isRegistered ? "Registered" : "Register"}
           </button>
 
           <p>
