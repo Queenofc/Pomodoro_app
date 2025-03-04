@@ -100,19 +100,43 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
 
   const handleCustomTimeChange = (event) => {
     const { name, value } = event.target;
-    let numericValue = parseInt(value, 10) || 0;
-    if (
-      (name === "hours" && (numericValue < 0 || numericValue > 23)) ||
-      (name === "minutes" && (numericValue < 0 || numericValue > 59)) ||
-      (name === "seconds" && (numericValue < 0 || numericValue > 59))
-    ) {
-      toast.error("Enter a valid time period!", { autoClose: 3000 });
-      numericValue = 0;
+    let numericValue = parseInt(value, 10);
+  
+    if (value === "") {
+      setCustomTime((prev) => ({ ...prev, [name]: "" }));
+      return;
     }
+  
+    if (isNaN(numericValue)) numericValue = 0;
+  
+    const limits = {
+      hours: [0, 23],
+      minutes: [0, 59],
+      seconds: [0, 59],
+    };
+  
+    if (numericValue < limits[name][0] || numericValue > limits[name][1]) {
+      if (!toast.isActive("timeError")) {
+        toast.dismiss("timeError"); // Ensure old toast is removed before showing a new one
+        toast.error("Enter a valid time period!", {
+          autoClose: 3000,
+          toastId: "timeError",
+        });
+      }
+      return;
+    }
+  
     setCustomTime((prev) => ({ ...prev, [name]: numericValue }));
   };
+  
+  
 
   const applyCustomTime = () => {
+    if (isActive) {
+      toast.error("Pause the timer before setting a new time!", { autoClose: 3000 });
+      return;
+    }
+  
     const totalSeconds =
       customTime.hours * 3600 + customTime.minutes * 60 + customTime.seconds;
     if (totalSeconds > 0) {
@@ -120,7 +144,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       localStorage.setItem("remainingTime", totalSeconds);
     }
   };
-
+  
   const toggleTheme = () => {
     setIsDarkMode((prev) => {
       const newMode = !prev;
@@ -138,6 +162,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
       logout(); // Clears token and sets isAuthenticated to false
       navigate("/login");
     } catch (error) {
+      toast.dismiss("logoutError");
       toast.error("Logout failed", { autoClose: 3000 });
     }
   };
@@ -203,7 +228,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
           value={customTime.seconds || ""}
           onChange={handleCustomTimeChange}
         />
-        <button onClick={applyCustomTime}>Set</button>
+        <button onClick={applyCustomTime} disabled={isActive}>Set</button>
       </div>
 
       <div className="controls">
