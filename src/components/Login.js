@@ -7,7 +7,7 @@ import { useAuth } from "../AuthContext";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+const backendUrl = process.env.REACT_APP_BACKEND_URL ;
 
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
