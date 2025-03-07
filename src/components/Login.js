@@ -7,6 +7,8 @@ import { useAuth } from "../AuthContext";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [captchaVerified, setCaptchaVerified] = useState(false);
@@ -35,7 +37,7 @@ const Login = () => {
     setSubmitted(true); // Disable button after submission
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch(`${backendUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),

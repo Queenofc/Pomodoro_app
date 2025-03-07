@@ -7,6 +7,8 @@ import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
 const Verify2FA = () => {
   const [qrCode, setQrCode] = useState("");
   const [code, setCode] = useState("");
@@ -29,7 +31,7 @@ const Verify2FA = () => {
 
     const fetchQRCode = async () => {
       try {
-        const res = await axios.post("http://localhost:5000/2fa/generate-qr", {
+        const res = await axios.post(`${backendUrl}/2fa/generate-qr`, {
           email,
         });
         if (res.data.qrCode) {
@@ -70,7 +72,7 @@ const Verify2FA = () => {
       }
 
       try {
-        const res = await axios.post("http://localhost:5000/2fa/verify-2fa", {
+        const res = await axios.post(`${backendUrl}/2fa/verify-2fa`, {
           email,
           code,
         });

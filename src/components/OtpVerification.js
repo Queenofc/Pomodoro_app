@@ -5,6 +5,8 @@ import _ from "lodash";  // Import Lodash for debouncing
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
   const [email, setEmail] = useState(null);
@@ -46,7 +48,7 @@ const OtpVerification = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/otp/verify-otp", {
+      const response = await fetch(`${backendUrl}/otp/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),

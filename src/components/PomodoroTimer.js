@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const [time, setTime] = useState(() => {
     return parseInt(localStorage.getItem("remainingTime"), 10) || 0;
@@ -154,7 +156,7 @@ const PomodoroTimer = ({ setStopMusicTrigger }) => {
   };
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:5000/auth/logout", {
+      await fetch(`${backendUrl}/auth/logout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });

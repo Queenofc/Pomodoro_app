@@ -5,6 +5,8 @@ import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
+const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+
 const Register = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -61,7 +63,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/otp/register", {
+      const response = await fetch(`${backendUrl}/otp/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),

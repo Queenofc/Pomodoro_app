@@ -11,7 +11,12 @@ const twofaRoutes = require("./routes/twofaRoutes");
 const app = express();
 
 // Middleware
-app.use(cors({ origin: process.env.FRONTEND_URL || "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 // Connect to MongoDB
@@ -22,7 +27,21 @@ app.use("/auth", authRoutes);
 app.use("/otp", otpRoutes);
 app.use("/2fa", twofaRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log('✅ Server runs');
+app.get("/", (req, res) => {
+  if (process.env.NODE_ENV === "production") {
+    res.send("Server is running in production mode!");
+  } else {
+    res.send("Development server is running.");
+  }
+});
+
+// Only start the server when running locally
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log("✅ Server runs on port " + PORT);
   });
+}
+
+// Export the app for Vercel
+module.exports = app;
