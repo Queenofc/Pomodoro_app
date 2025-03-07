@@ -11,13 +11,17 @@ const twofaRoutes = require("./routes/twofaRoutes");
 const app = express();
 
 // Middleware
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
-  })
-);
-app.use(express.json());
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "*", // Allow frontend
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow specific methods
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+app.use(express.json()); // Parses JSON data
+app.use(express.urlencoded({ extended: true })); // Parses URL-encoded data
+app.options("*", cors(corsOptions)); // Handle CORS preflight
 
 // Connect to MongoDB
 connectDB();
@@ -28,20 +32,18 @@ app.use("/otp", otpRoutes);
 app.use("/2fa", twofaRoutes);
 
 app.get("/", (req, res) => {
-  if (process.env.NODE_ENV === "production") {
-    res.send("Server is running in production mode!");
-  } else {
-    res.send("Development server is running.");
-  }
+  res.send("🚀 Server is running successfully!");
 });
 
-// Only start the server when running locally
+// Start server locally but NOT on Vercel (Vercel auto-handles it)
 if (process.env.NODE_ENV !== "production") {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
-    console.log("✅ Server runs on port " + PORT);
+    console.log(`✅ Server runs on port ${PORT}`);
   });
+} else {
+  console.log("🚀 Running on Vercel...");
 }
 
-// Export the app for Vercel
+// Export app for Vercel
 module.exports = app;
