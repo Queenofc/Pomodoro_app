@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+const backendUrl = process.env.REACT_APP_BACKEND_URL ;
 
 const Register = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
@@ -143,7 +143,7 @@ const Register = () => {
           </button>
 
           <p>
-            Already registered? <a href="/login">Login here</a>
+            Already registered? <Link to="/register">Login here</Link>
           </p>
         </div>
       )}

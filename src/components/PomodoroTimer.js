@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const PomodoroTimer = ({ setStopMusicTrigger }) => {
   const [time, setTime] = useState(() => {

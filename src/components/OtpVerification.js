@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import _ from "lodash";  // Import Lodash for debouncing
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
@@ -102,7 +102,7 @@ const OtpVerification = () => {
             {loading ? "Verifying..." : "Verify OTP"}
           </button>
           <p>
-            <a href="/register">⬅ Back to Register</a>
+          <Link to="/register">⬅ Back to Register</Link>
           </p>
         </div>
       )}
