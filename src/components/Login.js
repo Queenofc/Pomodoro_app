@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import ReCAPTCHA from "react-google-recaptcha";
 import _ from "lodash";
@@ -108,7 +108,7 @@ const Login = () => {
             {submitted ? "Logging in..." : "Login"}
           </button>
           <p>
-            No account? <a href="/register">Register here</a>
+          No account? <Link to="/register">Register here</Link>
           </p>
         </div>
       )}
