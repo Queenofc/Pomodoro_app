@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { useAuth } from "./AuthContext"; 
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Register from "./components/Register";
-import OtpVerification from "./components/OtpVerification";
-import Verify2FA from "./components/Verify2FA";
+import { useAuth } from "./AuthContext.js"; 
+import Home from "./components/Home.js";
+import Login from "./components/Login.js";
+import Register from "./components/Register,js";
+import OtpVerification from "./components/OtpVerification.js";
+import Verify2FA from "./components/Verify2FA,js";
 
 const App = () => {
     const { isAuthenticated } = useAuth();
