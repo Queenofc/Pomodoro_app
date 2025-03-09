@@ -19,9 +19,12 @@ const moodData = {
 const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
   const [mood, setMood] = useState("none");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasReset, setHasReset] = useState(false); // Track if reset has been applied
   const audioRef = useRef(new Audio());
-  const debounceRef = useRef(null); // ✅ Store the debounced function
+  const debounceRef = useRef(null); // ✅ Store the debounced play/pause toggle
+  const shouldLoopRef = useRef(true); // Controls auto looping
 
+  // Effect for handling mood changes and playing audio
   useEffect(() => {
     if (mood === "none") {
       audioRef.current.pause();
@@ -30,44 +33,70 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
     } else {
       audioRef.current.pause();
       audioRef.current.src = moodData[mood.toLowerCase()]?.url || "";
+      // Enable looping when a mood is selected
+      shouldLoopRef.current = true;
       if (isPlaying) {
         audioRef.current
           .play()
-          .catch(() => toast.error("Playback Error", { autoClose: 3000 }));
+          .catch((error) => {
+            // Only show toast if not stopped by timer
+            if (!stopMusicTrigger) {
+              toast.error("Playback Error", { autoClose: 3000 });
+            }
+          });
       }
       onMoodChange(mood.charAt(0).toUpperCase() + mood.slice(1));
     }
-  }, [mood, isPlaying, onMoodChange]);
+  }, [mood, isPlaying, onMoodChange, stopMusicTrigger]);
 
   useEffect(() => {
     if (isPlaying) {
       audioRef.current
         .play()
-        .catch(() => toast.error("Playback Error", { autoClose: 3000 }));
+        .catch((error) => {
+          if (!stopMusicTrigger) {
+            toast.error("Playback Error", { autoClose: 3000 });
+          }
+        });
     } else {
       audioRef.current.pause();
     }
-  }, [isPlaying]);
+  }, [isPlaying, stopMusicTrigger]);
 
+  // Reset the music player only once when stopMusicTrigger becomes true.
   useEffect(() => {
-    if (stopMusicTrigger) {
+    if (stopMusicTrigger && !hasReset) {
+      shouldLoopRef.current = false; // Disable auto-loop on song end
       audioRef.current.pause();
+      audioRef.current.currentTime = 0; // Reset audio position
       setIsPlaying(false);
+      setMood("none"); // Reset mood to "none"
       onMoodChange("None");
+      setHasReset(true);
+    } else if (!stopMusicTrigger && hasReset) {
+      // When timer is running again, clear the reset flag to allow re-use.
+      setHasReset(false);
     }
-  }, [stopMusicTrigger, onMoodChange]);
+  }, [stopMusicTrigger, hasReset, onMoodChange]);
 
+  // Auto-loop the audio on song end if looping is enabled and music is playing
   useEffect(() => {
     const audio = audioRef.current;
     const handleSongEnd = () => {
       audio.currentTime = 0;
-      audio.play();
+      if (shouldLoopRef.current && isPlaying) {
+        audio.play().catch((error) => {
+          if (!stopMusicTrigger) {
+            toast.error("Playback Error", { autoClose: 3000 });
+          }
+        });
+      }
     };
     audio.addEventListener("ended", handleSongEnd);
     return () => audio.removeEventListener("ended", handleSongEnd);
-  }, [mood]);
+  }, [mood, isPlaying, stopMusicTrigger]);
 
-  // ✅ Store the debounced function in a ref so it doesn't re-create on every render
+  // Debounce the play/pause toggle button so rapid clicks are ignored
   if (!debounceRef.current) {
     debounceRef.current = _.debounce(() => {
       setIsPlaying((prev) => !prev);
@@ -90,7 +119,11 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
 
         {mood !== "none" && (
           <div className="music-box">
-            <img src={moodData[mood.toLowerCase()]?.image} alt={moodData[mood.toLowerCase()]?.title} className="music-image" />
+            <img
+              src={moodData[mood.toLowerCase()]?.image}
+              alt={moodData[mood.toLowerCase()]?.title}
+              className="music-image"
+            />
             <h3>{moodData[mood.toLowerCase()]?.title}</h3>
             <button className="play-btn" onClick={debounceRef.current}>
               {isPlaying ? "⏸ Pause" : "▶ Play"}
