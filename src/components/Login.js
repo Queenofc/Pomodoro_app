@@ -47,9 +47,36 @@ const Login = () => {
       // "admin-token" is a placeholder token for admin users.
       login("admin-token", adminUser);
       toast.success(
-        "Admin login successful! Redirecting to admin dashboard..."
+        "Admin login successful!"
       );
       setTimeout(() => navigate("/admin-dashboard"), 2000);
+      setLoading(false);
+      return;
+    }
+
+    // Call the approval endpoint which returns only a boolean variable.
+    try {
+      const approvalResponse = await fetch(
+        `${backendUrl}/auth/approval?email=${encodeURIComponent(
+          userData.email
+        )}`
+      );
+      if (!approvalResponse.ok) {
+        throw new Error("Could not verify approval status");
+      }
+      // Since the response is only a variable, we assume it returns a boolean.
+      const adminApproved = await approvalResponse.json();
+      if (!adminApproved) {
+        toast.success(
+          "Redirecting ...",
+          { autoClose: 3000 }
+        );
+        setTimeout(() => navigate("/wait"), 2000);
+        return;
+      }
+    } catch (error) {
+      toast.error(error.message || "Error verifying admin approval.");
+      setSubmitted(false);
       setLoading(false);
       return;
     }

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import loadingGif from "../images/loading.gif";
 
 const backendUrl = "http://localhost:5001";
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -20,6 +22,8 @@ const AdminDashboard = () => {
         setUsers(data.users);
       } catch (error) {
         toast.error("Failed to fetch users.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchUsers();
@@ -46,7 +50,7 @@ const AdminDashboard = () => {
 
   const deleteUser = async (userId) => {
     try {
-      const response = await fetch(`{backendUrl}/admin/delete-user`, {
+      const response = await fetch(`${backendUrl}/admin/delete-user`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -62,6 +66,14 @@ const AdminDashboard = () => {
       toast.error("Error deleting user.");
     }
   };
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <img src={loadingGif} alt="Loading..." className="loading-gif" />
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -7,6 +7,7 @@ import Register from "./components/Register.js";
 import OtpVerification from "./components/OtpVerification.js";
 import Verify2FA from "./components/Verify2FA.js";
 import AdminDashboard from "./components/AdminDashboard.js";
+import Wait from "./components/Wait.js";
 
 const App = () => {
   const { isAuthenticated, user } = useAuth();
@@ -27,6 +28,7 @@ const App = () => {
           <Navigate to="/login" />
         } 
       />
+      <Route path="/wait" element={<Wait />} />
       {/* Redirect any undefined route to "/login" */}
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>

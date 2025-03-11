@@ -1008,3 +1008,63 @@ button:hover {
   width: 600px;
   height: 450px;
 }
+
+.wait-page {
+  width: 90%;
+  max-width: 300px;
+  padding: 30px;
+  background: linear-gradient(135deg, #ff8c00, #ff4500);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  font-family: "PT Sans Narrow", sans-serif;
+  color: white;
+  
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wait-page h2 {
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.wait-page p {
+  text-align: justify;
+  font-size: 17px;
+  margin: 20px;
+  font-weight: bold;
+  max-width: 90%;
+  margin-bottom: 15px;
+}
+
+.wait-page a {
+  color: #ffd700;
+  text-decoration: none;
+}
+
+.wait-page a:hover {
+  text-decoration: none;
+  color: #ffea00;
+}
+
+/* Responsive adjustments for devices with max-width: 400px */
+@media (max-width: 400px) {
+  .wait-page {
+    width: 70%;
+    padding: 20px;
+  }
+  
+  .wait-page h2 {
+    font-size: 40px;
+    margin-bottom: 15px;
+  }
+  
+  .wait-page p {
+    font-size: 15px;
+    margin: 17px;
+    margin-bottom: 10px;
+  }
+}
