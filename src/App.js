@@ -6,21 +6,31 @@ import Login from "./components/Login.js";
 import Register from "./components/Register.js";
 import OtpVerification from "./components/OtpVerification.js";
 import Verify2FA from "./components/Verify2FA.js";
+import AdminDashboard from "./components/AdminDashboard.js";
 
 const App = () => {
-    const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
-    return (
-        <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/otp" element={<OtpVerification />} />
-            <Route path="/verify" element={<Verify2FA />} />
-            <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-            {/* Redirect any undefined route (including "/") to "/login" */}
-            <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-    );
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/otp" element={<OtpVerification />} />
+      <Route path="/verify" element={<Verify2FA />} />
+      <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
+      {/* Secure admin route: only accessible if authenticated and user has admin role */}
+      <Route 
+        path="/admin-dashboard" 
+        element={
+          isAuthenticated && user?.role === "admin" ? 
+          <AdminDashboard /> : 
+          <Navigate to="/login" />
+        } 
+      />
+      {/* Redirect any undefined route to "/login" */}
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
+  );
 };
 
 export default App;

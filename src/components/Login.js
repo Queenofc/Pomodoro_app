@@ -7,7 +7,7 @@ import { useAuth } from "../AuthContext";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = "http://localhost:5000" ;
+const backendUrl = "http://localhost:5000";
 
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
@@ -35,6 +35,24 @@ const Login = () => {
     }
     setLoading(true);
     setSubmitted(true); // Disable button after submission
+
+    // Check if the entered credentials match the admin credentials (from .env)
+    if (
+      userData.email === process.env.REACT_APP_ADMIN_EMAIL &&
+      userData.password === process.env.REACT_APP_ADMIN_PASSWORD
+    ) {
+      // Construct the admin user object with an admin role
+      const adminUser = { email: userData.email, role: "admin" };
+      // Use the AuthContext login function to store the token and user data.
+      // "admin-token" is a placeholder token for admin users.
+      login("admin-token", adminUser);
+      toast.success(
+        "Admin login successful! Redirecting to admin dashboard..."
+      );
+      setTimeout(() => navigate("/admin-dashboard"), 2000);
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(`${backendUrl}/auth/login`, {
@@ -79,7 +97,9 @@ const Login = () => {
             type="email"
             placeholder="Email"
             value={userData.email}
-            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            onChange={(e) =>
+              setUserData({ ...userData, email: e.target.value })
+            }
             disabled={submitted}
           />
           <div className="password-container">
@@ -88,11 +108,16 @@ const Login = () => {
               className="password-input"
               placeholder="Password"
               value={userData.password}
-              onChange={(e) => setUserData({ ...userData, password: e.target.value })}
+              onChange={(e) =>
+                setUserData({ ...userData, password: e.target.value })
+              }
               disabled={submitted}
             />
-            <span className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? "🔓":"🔒"}
+            <span
+              className="password-toggle"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "🔓" : "🔒"}
             </span>
           </div>
           <div className="captcha-container">
@@ -101,14 +126,14 @@ const Login = () => {
               onChange={handleCaptcha}
             />
           </div>
-          <button 
-            onClick={() => debounceRef.current()} 
+          <button
+            onClick={() => debounceRef.current()}
             disabled={!captchaVerified || submitted}
           >
             {submitted ? "Logging in..." : "Login"}
           </button>
           <p>
-          No account? <Link to="/register">Register here</Link>
+            No account? <Link to="/register">Register here</Link>
           </p>
         </div>
       )}
