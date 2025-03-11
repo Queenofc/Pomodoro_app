@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
+const backendUrl = "http://localhost:5001";
+
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/admin/users`, {
+        const response = await fetch(`${backendUrl}/admin/users`, {
           headers: { 
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -25,7 +27,7 @@ const AdminDashboard = () => {
 
   const approveUser = async (userId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/admin/approve-user`, {
+      const response = await fetch(`${backendUrl}/admin/approve-user`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -44,7 +46,7 @@ const AdminDashboard = () => {
 
   const deleteUser = async (userId) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/admin/delete-user`, {
+      const response = await fetch(`{backendUrl}/admin/delete-user`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",

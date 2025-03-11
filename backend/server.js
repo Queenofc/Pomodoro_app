@@ -12,7 +12,7 @@ const app = express();
 
 // Middleware
 const corsOptions = {
-  origin:"http://localhost:3000" , // Allow frontend
+  origin:"http://localhost:3001" , // Allow frontend
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow specific methods
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 
 // Start server locally but NOT on Vercel (Vercel auto-handles it)
 if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.PORT || 5001;
   app.listen(PORT, () => {
     console.log(`✅ Server runs on port ${PORT}`);
   });

@@ -5,7 +5,7 @@ import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = "http://localhost:5000";
+const backendUrl = "http://localhost:5001";
 
 const Register = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });

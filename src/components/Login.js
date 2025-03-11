@@ -7,7 +7,7 @@ import { useAuth } from "../AuthContext";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = "http://localhost:5000";
+const backendUrl = "http://localhost:5001";
 
 const Login = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });
