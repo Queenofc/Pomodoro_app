@@ -181,10 +181,10 @@ body {
 /* 🎵 Music Player Container */
 .music-container {
   text-align: center;
-  padding: 0px;
+  padding: 15px;
   border: 2px solid #ccc;
   border-radius: 25px;
-  width: 350px;
+  max-width: 350px;
   margin: auto;
   margin-bottom: 10px;
   background: linear-gradient(
@@ -194,6 +194,25 @@ body {
   ); /* Deeper orange to magenta */
   box-shadow: 0 4px 20px rgba(209, 0, 122, 0.4); /* Soft glowing effect */
   transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 400px) {
+.music-container {
+  text-align: center;
+  padding: 15px;
+  border: 2px solid #ccc;
+  border-radius: 25px;
+  width: 270px;
+  margin: auto;
+  margin-bottom: 10px;
+  background: linear-gradient(
+    135deg,
+    #ff5400,
+    #d1007a
+  ); /* Deeper orange to magenta */
+  box-shadow: 0 4px 20px rgba(209, 0, 122, 0.4); /* Soft glowing effect */
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
 }
 
 /* 🌙 Dark Mode Music Container */
