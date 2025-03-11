@@ -7,7 +7,7 @@ import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL ;
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Verify2FA = () => {
   const [qrCode, setQrCode] = useState("");
@@ -31,9 +31,11 @@ const Verify2FA = () => {
 
     const fetchQRCode = async () => {
       try {
-        const res = await axios.post(`${backendUrl}/2fa/generate-qr`, {
-          email,
-        });
+        const res = await axios.post(
+          `${backendUrl}/2fa/generate-qr`,
+          { email },
+          { timeout: 10000 }
+        );
         if (res.data.qrCode) {
           setQrCode(res.data.qrCode);
         } else {
@@ -129,8 +131,8 @@ const Verify2FA = () => {
           )}
 
           <h1>
-            Use Google Authenticator to scan the QR code (only for first-time users)
-            and enter the OTP.
+            Use Google Authenticator to scan the QR code (only for first-time
+            users) and enter the OTP.
           </h1>
 
           <input
