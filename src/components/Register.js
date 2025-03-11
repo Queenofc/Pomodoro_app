@@ -5,7 +5,7 @@ import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL ;
+const backendUrl = "http://localhost:5000";
 
 const Register = () => {
   const [userData, setUserData] = useState({ email: "", password: "" });

@@ -12,7 +12,7 @@ const app = express();
 
 // Middleware
 const corsOptions = {
-  origin: process.env.FRONTEND_URL , // Allow frontend
+  origin:"http://localhost:3000" , // Allow frontend
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allow specific methods
   allowedHeaders: ["Content-Type", "Authorization"]
