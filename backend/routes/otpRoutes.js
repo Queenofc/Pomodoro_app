@@ -54,7 +54,7 @@ router.post("/register", async (req, res) => {
       body: JSON.stringify({
         sender: { email: SENDER_EMAIL },
         to: [{ email }],
-        subject: "OTP for Registration",
+        subject: "Registration for Chill With Pomodoro",
         htmlContent: `<p>Welcome to Chill With Pomodoro! Your OTP for registration is: <strong>${otp}</strong></p>`,
       }),
     });

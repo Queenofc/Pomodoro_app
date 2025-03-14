@@ -14,7 +14,7 @@ const Login = () => {
   const [captchaVerified, setCaptchaVerified] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [submitted, setSubmitted] = useState(false); // New state
+  const [submitted, setSubmitted] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
   const debounceRef = useRef(null);
@@ -34,52 +34,7 @@ const Login = () => {
       return;
     }
     setLoading(true);
-    setSubmitted(true); // Disable button after submission
-
-    // Check if the entered credentials match the admin credentials (from .env)
-    if (
-      userData.email === process.env.REACT_APP_ADMIN_EMAIL &&
-      userData.password === process.env.REACT_APP_ADMIN_PASSWORD
-    ) {
-      // Construct the admin user object with an admin role
-      const adminUser = { email: userData.email, role: "admin" };
-      // Use the AuthContext login function to store the token and user data.
-      // "admin-token" is a placeholder token for admin users.
-      login("admin-token", adminUser);
-      toast.success(
-        "Admin login successful!"
-      );
-      setTimeout(() => navigate("/admin-dashboard"), 2000);
-      setLoading(false);
-      return;
-    }
-
-    // Call the approval endpoint which returns only a boolean variable.
-    try {
-      const approvalResponse = await fetch(
-        `${backendUrl}/auth/approval?email=${encodeURIComponent(
-          userData.email
-        )}`
-      );
-      if (!approvalResponse.ok) {
-        throw new Error("Could not verify approval status");
-      }
-      // Since the response is only a variable, we assume it returns a boolean.
-      const adminApproved = await approvalResponse.json();
-      if (!adminApproved) {
-        toast.success(
-          "Redirecting ...",
-          { autoClose: 3000 }
-        );
-        setTimeout(() => navigate("/wait"), 2000);
-        return;
-      }
-    } catch (error) {
-      toast.error(error.message || "Error verifying admin approval.");
-      setSubmitted(false);
-      setLoading(false);
-      return;
-    }
+    setSubmitted(true);
 
     try {
       const response = await fetch(`${backendUrl}/auth/login`, {
@@ -91,16 +46,22 @@ const Login = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Login failed");
 
-      if (data.requires2FA) {
+      // Check if the user is an admin based on the response
+      if (data.isAdmin) {
+        login(data.token, data.user);
+        toast.success("Welcome Admin!");
+        setTimeout(() => navigate("/admin-dashboard"), 2000);
+      } else if (data.requires2FA) {
+        // Non-admin users requiring 2FA are redirected to the verification page
         navigate("/verify", { state: { email: userData.email } });
       } else {
-        login(data.token);
+        login(data.token, data.user);
         toast.success("Login successful! Redirecting...");
         setTimeout(() => navigate("/home"), 2000);
       }
     } catch (err) {
       toast.error(err.message || "Server error. Please try again.");
-      setSubmitted(false); // Re-enable button on failure
+      setSubmitted(false);
     } finally {
       setLoading(false);
     }

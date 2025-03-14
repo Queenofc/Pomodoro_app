@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const otpRoutes = require("./routes/otpRoutes");
 const twofaRoutes = require("./routes/twofaRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
@@ -30,6 +31,7 @@ connectDB();
 app.use("/auth", authRoutes);
 app.use("/otp", otpRoutes);
 app.use("/2fa", twofaRoutes);
+app.use("/admin", adminRoutes);
 
 app.get("/", (req, res) => {
   res.send("🚀 Server is running successfully!");

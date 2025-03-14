@@ -8,9 +8,10 @@ import OtpVerification from "./components/OtpVerification.js";
 import Verify2FA from "./components/Verify2FA.js";
 import AdminDashboard from "./components/AdminDashboard.js";
 import Wait from "./components/Wait.js";
+import AdminRoute from "./components/AdminRoute.js"; // Adjust the path if needed
 
 const App = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <Routes>
@@ -18,18 +19,19 @@ const App = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/otp" element={<OtpVerification />} />
       <Route path="/verify" element={<Verify2FA />} />
-      <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-      {/* Secure admin route: only accessible if authenticated and user has admin role */}
+      <Route 
+        path="/home" 
+        element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
+      />
       <Route 
         path="/admin-dashboard" 
         element={
-          isAuthenticated && user?.role === "admin" ? 
-          <AdminDashboard /> : 
-          <Navigate to="/login" />
-        } 
+          <AdminRoute>
+            <AdminDashboard />
+          </AdminRoute>
+        }
       />
       <Route path="/wait" element={<Wait />} />
-      {/* Redirect any undefined route to "/login" */}
       <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );

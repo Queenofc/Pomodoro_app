@@ -23,7 +23,7 @@ const AdminDashboard = () => {
       } catch (error) {
         toast.error("Failed to fetch users.");
       } finally {
-        setLoading(false);
+        setTimeout(() => setLoading(false), 2000); // Delay for 2 seconds
       }
     };
     fetchUsers();
