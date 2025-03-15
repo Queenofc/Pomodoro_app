@@ -7,17 +7,28 @@ const AdminRoute = ({ children }) => {
   const location = useLocation();
 
   if (!isAuthenticated) {
+    // Not logged in? Send to login page.
     return <Navigate to="/login" />;
   }
 
+  // If the user is an admin, redirect to the admin dashboard
+  if (user && user.isAdmin && location.pathname !== "/admin-dashboard") {
+    return <Navigate to="/admin-dashboard" />;
+  }
+
+  // For non-admin users:
   if (user && !user.isAdmin) {
-    return <Navigate to="/verify" />;
+    // If not approved by admin, redirect to the wait page
+    if (!user.admin_approved && location.pathname !== "/wait") {
+      return <Navigate to="/wait" />;
+    }
+    // If approved, redirect to the verify page
+    if (user.admin_approved && location.pathname !== "/verify") {
+      return <Navigate to="/verify" />;
+    }
   }
 
-  if (user && user.requires2FA && !user.is2FAVerified && location.pathname !== "/verify") {
-    return <Navigate to="/verify" />;
-  }
-
+  // Otherwise, render the protected children
   return children;
 };
 
