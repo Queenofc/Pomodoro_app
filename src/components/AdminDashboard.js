@@ -1,11 +1,22 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import loadingGif from "../images/loading.gif";
-import { useAuth } from "../AuthContext";
+import { useAuth } from "../AuthContext.js";
 import { useNavigate } from "react-router-dom";
 import "./music.css";
 
 const backendUrl = "http://localhost:5001";
+
+// Simple debounce implementation.
+function debounce(func, delay) {
+  let timer;
+  return function (...args) {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+}
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -36,7 +47,9 @@ const AdminDashboard = () => {
       console.error("Error fetching users:", error);
       toast.error("Failed to fetch users.");
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000); // 2-second delay added here
     }
   }, [adminEmail, navigate]);
 
@@ -63,13 +76,18 @@ const AdminDashboard = () => {
     }
   };
 
-  const approveUser = (userId) => {
-    handleUserAction("/admin/approve-user", userId, "User approved!");
-  };
+  // Create debounced functions using useRef so they are created once.
+  const debouncedApproveUser = useRef(
+    debounce((userId) => {
+      handleUserAction("/admin/approve-user", userId, "User approved!");
+    }, 500)
+  ).current;
 
-  const deleteUser = (userId) => {
-    handleUserAction("/admin/delete-user", userId, "User deleted!");
-  };
+  const debouncedDeleteUser = useRef(
+    debounce((userId) => {
+      handleUserAction("/admin/delete-user", userId, "User deleted!");
+    }, 500)
+  ).current;
 
   if (loading) {
     return (
@@ -91,7 +109,7 @@ const AdminDashboard = () => {
             {users.filter((u) => !u.admin_approved).map((u) => (
               <li key={u._id}>
                 {u.email} - Pending
-                <button onClick={() => approveUser(u._id)}>Approve</button>
+                <button onClick={() => debouncedApproveUser(u._id)}>Approve</button>
               </li>
             ))}
           </ul>
@@ -102,7 +120,7 @@ const AdminDashboard = () => {
             {users.map((u) => (
               <li key={u._id}>
                 {u.email} - {u.admin_approved ? "Approved" : "Pending"}
-                <button onClick={() => deleteUser(u._id)}>Delete</button>
+                <button onClick={() => debouncedDeleteUser(u._id)}>Delete</button>
               </li>
             ))}
           </ul>
