@@ -76,10 +76,11 @@ const Verify2FA = () => {
       }
 
       try {
-        const res = await axios.post(`${backendUrl}/2fa/verify-2fa`, {
-          email,
-          code,
-        });
+        const res = await axios.post(
+          `${backendUrl}/2fa/verify-2fa`,
+          { email, code },
+          { timeout: 5000 } // Timeout after 5000 milliseconds (5 seconds)
+        );
 
         if (res.data.success) {
           login(res.data.token);

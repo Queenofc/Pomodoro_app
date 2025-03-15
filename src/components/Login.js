@@ -46,18 +46,21 @@ const Login = () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Login failed");
 
-      // Check if the user is an admin based on the response
+      login(data.token, data.user);
       if (data.isAdmin) {
-        login(data.token, data.user);
         toast.success("Welcome Admin!");
         setTimeout(() => navigate("/admin-dashboard"), 2000);
-      } else if (data.requires2FA) {
-        // Non-admin users requiring 2FA are redirected to the verification page
-        navigate("/verify", { state: { email: userData.email } });
       } else {
-        login(data.token, data.user);
-        toast.success("Login successful! Redirecting...");
-        setTimeout(() => navigate("/home"), 2000);
+        if (!data.user.admin_approved) {
+          toast.info("Redirecting...");
+          setTimeout(() => navigate("/wait"), 2000);
+        } else {
+          toast.success("Redirecting to verification...");
+          setTimeout(
+            () => navigate("/verify", { state: { email: userData.email } }),
+            2000
+          );
+        }
       }
     } catch (err) {
       toast.error(err.message || "Server error. Please try again.");

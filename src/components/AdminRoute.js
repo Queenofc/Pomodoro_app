@@ -1,21 +1,23 @@
 import React from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthContext.js";
 
 const AdminRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuth();
+  const location = useLocation();
 
-  // If not logged in, redirect to login.
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
-  // If logged in but not an admin, redirect to home.
   if (user && !user.isAdmin) {
     return <Navigate to="/home" />;
   }
 
-  // Otherwise, allow access.
+  if (user && user.requires2FA && !user.is2FAVerified && location.pathname !== "/verify") {
+    return <Navigate to="/verify" />;
+  }
+
   return children;
 };
 

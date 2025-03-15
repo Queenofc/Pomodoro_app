@@ -143,7 +143,7 @@ const Register = () => {
           </button>
 
           <p>
-            Already registered? <Link to="/register">Login here</Link>
+            Already registered? <Link to="/login">Login here</Link>
           </p>
         </div>
       )}

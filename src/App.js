@@ -18,7 +18,14 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/otp" element={<OtpVerification />} />
-      <Route path="/verify" element={<Verify2FA />} />
+      <Route 
+        path="/verify" 
+        element={
+          <AdminRoute>
+            <Verify2FA />
+          </AdminRoute>
+        }
+      />
       <Route 
         path="/home" 
         element={isAuthenticated ? <Home /> : <Navigate to="/login" />}
