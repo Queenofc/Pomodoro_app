@@ -11,7 +11,7 @@ const AdminRoute = ({ children }) => {
   }
 
   if (user && !user.isAdmin) {
-    return <Navigate to="/home" />;
+    return <Navigate to="/verify" />;
   }
 
   if (user && user.requires2FA && !user.is2FAVerified && location.pathname !== "/verify") {
