@@ -21,6 +21,11 @@ function debounce(func, delay) {
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  // Modal state for confirmation dialog
+  const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(""); // "approve" or "delete"
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
   const { user } = useAuth();
   const adminEmail = user?.email;
   const navigate = useNavigate();
@@ -89,6 +94,33 @@ const AdminDashboard = () => {
     }, 500)
   ).current;
 
+  // Opens the modal and saves the action type and userId
+  const openConfirmModal = (action, userId) => {
+    setConfirmAction(action);
+    setSelectedUserId(userId);
+    setConfirmModalOpen(true);
+  };
+
+  // When user confirms "Yes"
+  const handleConfirmYes = () => {
+    if (confirmAction === "approve") {
+      debouncedApproveUser(selectedUserId);
+    } else if (confirmAction === "delete") {
+      debouncedDeleteUser(selectedUserId);
+    }
+    // Close modal and clear state
+    setConfirmModalOpen(false);
+    setSelectedUserId(null);
+    setConfirmAction("");
+  };
+
+  // When user clicks "No"
+  const handleConfirmNo = () => {
+    setConfirmModalOpen(false);
+    setSelectedUserId(null);
+    setConfirmAction("");
+  };
+
   return (
     <div className="admin-page">
       <ToastContainer />
@@ -109,7 +141,7 @@ const AdminDashboard = () => {
                   .map((u) => (
                     <li key={u._id}>
                       {u.email} - Pending
-                      <button onClick={() => debouncedApproveUser(u._id)}>
+                      <button onClick={() => openConfirmModal("approve", u._id)}>
                         Approve
                       </button>
                     </li>
@@ -122,12 +154,27 @@ const AdminDashboard = () => {
                 {users.map((u) => (
                   <li key={u._id}>
                     {u.email} - {u.admin_approved ? "Approved" : "Pending"}
-                    <button onClick={() => debouncedDeleteUser(u._id)}>
+                    <button onClick={() => openConfirmModal("delete", u._id)}>
                       Delete
                     </button>
                   </li>
                 ))}
               </ul>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Confirmation Modal */}
+      {confirmModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <p>
+              Are you sure you want to{" "}
+              {confirmAction === "approve" ? "approve" : "delete"} this user?
+            </p>
+            <div className="modal-buttons">
+              <button onClick={handleConfirmYes}>Yes</button>
+              <button onClick={handleConfirmNo}>No</button>
             </div>
           </div>
         </div>
