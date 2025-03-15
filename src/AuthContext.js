@@ -1,26 +1,35 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
-  const [authData, setAuthData] = useState({
-    isAuthenticated: false,
-    user: null,
-    token: null,
-  });
-
-  // Load persisted auth data on component mount
-  useEffect(() => {
+const getInitialAuthData = () => {
+  if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
-    if (token) {
-      setAuthData({
-        isAuthenticated: true,
-        token,
-        user: user ? JSON.parse(user) : null,
-      });
+    let user = localStorage.getItem("user");
+    if (user && user !== "undefined") {
+      try {
+        user = JSON.parse(user);
+      } catch (error) {
+        user = null;
+      }
+    } else {
+      user = null;
     }
-  }, []);
+    return {
+      isAuthenticated: !!token,
+      token,
+      user,
+    };
+  }
+  return {
+    isAuthenticated: false,
+    token: null,
+    user: null,
+  };
+};
+
+export const AuthProvider = ({ children }) => {
+  const [authData, setAuthData] = useState(getInitialAuthData());
 
   const login = (token, user) => {
     localStorage.setItem("token", token);
@@ -37,8 +46,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
     setAuthData({
       isAuthenticated: false,
-      user: null,
       token: null,
+      user: null,
     });
   };
 

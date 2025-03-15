@@ -23,6 +23,7 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
   const audioRef = useRef(new Audio());
   const debounceRef = useRef(null); // ✅ Store the debounced play/pause toggle
   const shouldLoopRef = useRef(true); // Controls auto looping
+  const previousMood = useRef("none"); // Track previous mood for switching detection
 
   // Effect for handling mood changes and playing audio
   useEffect(() => {
@@ -31,6 +32,8 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
       setIsPlaying(false);
       onMoodChange("none");
     } else {
+      // Check if switching between tracks (without pausing first)
+      const switchingTrack = previousMood.current !== "none" && previousMood.current !== mood;
       audioRef.current.pause();
       audioRef.current.src = moodData[mood.toLowerCase()]?.url || "";
       // Enable looping when a mood is selected
@@ -39,14 +42,16 @@ const MusicPlayer = ({ stopMusicTrigger, onMoodChange }) => {
         audioRef.current
           .play()
           .catch((error) => {
-            // Only show toast if not stopped by timer
-            if (!stopMusicTrigger) {
+            // Only show toast if not stopped by timer and not switching tracks
+            if (!stopMusicTrigger && !switchingTrack) {
               toast.error("Playback Error", { autoClose: 3000 });
             }
           });
       }
       onMoodChange(mood.charAt(0).toUpperCase() + mood.slice(1));
     }
+    // Update previous mood for next render
+    previousMood.current = mood;
   }, [mood, isPlaying, onMoodChange, stopMusicTrigger]);
 
   useEffect(() => {
