@@ -5,7 +5,7 @@ import { useAuth } from "../AuthContext.js";
 import { useNavigate } from "react-router-dom";
 import "./music.css";
 
-const backendUrl = "http://localhost:5001";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 // Simple debounce implementation.
 function debounce(func, delay) {

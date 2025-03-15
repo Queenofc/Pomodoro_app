@@ -7,7 +7,7 @@ import _ from "lodash";
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = "http://localhost:5001";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Verify2FA = () => {
   const [qrCode, setQrCode] = useState("");

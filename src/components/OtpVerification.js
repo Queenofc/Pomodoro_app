@@ -5,7 +5,7 @@ import _ from "lodash";  // Import Lodash for debouncing
 import "./music.css";
 import loadingGif from "../images/loading.gif";
 
-const backendUrl = "http://localhost:5001";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const OtpVerification = () => {
   const [otp, setOtp] = useState("");
