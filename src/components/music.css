@@ -1070,3 +1070,138 @@ button:hover {
 }
 
 /* admin-dashboard.css */
+.admin {
+  width: 100%;
+  max-width: 350px;
+  margin: 40px auto;
+  padding: 30px;
+  padding-bottom: 30px;
+  background: linear-gradient(135deg, #ff8c00, #ff4500);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  color: white;
+  font-family: "PT Sans Narrow", sans-serif;
+  text-align: center;
+  overflow: hidden;
+}
+@media (max-width: 500px) {
+  .admin {
+    max-width: 300px;
+    padding: 20px;
+    padding-bottom: 25px;
+  } 
+}
+
+/* Header styles */
+.admin h2 {
+  font-size: 40px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.admin p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  font-weight: bold;
+}
+
+/* User sections container arranged vertically */
+.user-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: calc(100% - 120px); /* Leaves space for header and padding */
+}
+
+.approve-users,
+.delete-users {
+  width: 90%;
+  background: white;
+  border: 2px solid black;
+  padding: 15px;
+  max-height: 200px; /* Fixed height; scroll appears if content exceeds this */
+  color: black;
+}
+
+/* Section headers */
+.approve-users h3,
+.delete-users h3 {
+  font-size: 28px;
+  margin: 1px ;
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ffd700;
+  padding-bottom: 5px;
+  color: black;
+}
+
+/* Unordered list styling with scrolling for Approve and Delete sections */
+.approve-users ul,
+.delete-users ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: black;
+  max-height: 75px;      /* Fixed height for the list */
+  overflow-y: scroll;     /* Always show vertical scrollbar (if content overflows) */
+  
+  /* Firefox scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* WebKit-based browsers scrollbar styling for the lists */
+.approve-users ul::-webkit-scrollbar,
+.delete-users ul::-webkit-scrollbar {
+  width: 8px;
+}
+
+.approve-users ul::-webkit-scrollbar-track,
+.delete-users ul::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.approve-users ul::-webkit-scrollbar-thumb,
+.delete-users ul::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.approve-users ul::-webkit-scrollbar-thumb:hover,
+.delete-users ul::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+/* List items styling */
+.user-sections li {
+  padding: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap:10px;
+  color: black;
+}
+
+.user-sections li:last-child {
+  border-bottom: none;
+}
+
+/* Buttons for user actions */
+.user-sections button {
+  padding: 8px 12px;
+  background: #ffd700;
+  color: #222;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.user-sections button:hover {
+  background: #ffea00;
+  color: #222;
+}

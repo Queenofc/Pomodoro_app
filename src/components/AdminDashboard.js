@@ -21,7 +21,7 @@ function debounce(func, delay) {
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const adminEmail = user?.email;
   const navigate = useNavigate();
 
@@ -89,43 +89,49 @@ const AdminDashboard = () => {
     }, 500)
   ).current;
 
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <img src={loadingGif} alt="Loading..." className="loading-gif" />
-      </div>
-    );
-  }
-
   return (
     <div className="admin-page">
       <ToastContainer />
-      <h2>Admin Dashboard</h2>
-      <p>Welcome, {adminEmail}. You have admin access.</p>
-      <div className="user-sections">
-        <div className="approve-users">
-          <h3>Approve Users</h3>
-          <ul>
-            {users.filter((u) => !u.admin_approved).map((u) => (
-              <li key={u._id}>
-                {u.email} - Pending
-                <button onClick={() => debouncedApproveUser(u._id)}>Approve</button>
-              </li>
-            ))}
-          </ul>
+      {loading ? (
+        <div className="loading-container">
+          <img src={loadingGif} alt="Loading..." className="loading-gif" />
         </div>
-        <div className="delete-users">
-          <h3>Delete Users</h3>
-          <ul>
-            {users.map((u) => (
-              <li key={u._id}>
-                {u.email} - {u.admin_approved ? "Approved" : "Pending"}
-                <button onClick={() => debouncedDeleteUser(u._id)}>Delete</button>
-              </li>
-            ))}
-          </ul>
+      ) : (
+        <div className="admin">
+          <h2>Admin Dashboard</h2>
+          <p>Welcome, {adminEmail}. You have admin access.</p>
+          <div className="user-sections">
+            <div className="approve-users">
+              <h3>Approve Users</h3>
+              <ul>
+                {users
+                  .filter((u) => !u.admin_approved)
+                  .map((u) => (
+                    <li key={u._id}>
+                      {u.email} - Pending
+                      <button onClick={() => debouncedApproveUser(u._id)}>
+                        Approve
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+            <div className="delete-users">
+              <h3>Delete Users</h3>
+              <ul>
+                {users.map((u) => (
+                  <li key={u._id}>
+                    {u.email} - {u.admin_approved ? "Approved" : "Pending"}
+                    <button onClick={() => debouncedDeleteUser(u._id)}>
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
