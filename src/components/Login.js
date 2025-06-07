@@ -82,13 +82,7 @@ const Login = () => {
           <img src={loadingGif} alt="Loading..." className="loading-gif" />
         </div>
       ) : (
-        <form
-          className="login"
-          onSubmit={(e) => {
-            e.preventDefault();
-            debounceRef.current();
-          }}
-        >
+        <div className="login">
           <h2>Login</h2>
           <input
             type="email"
@@ -123,16 +117,19 @@ const Login = () => {
               onChange={handleCaptcha}
             />
           </div>
-          <button type="submit" disabled={!captchaVerified || submitted}>
+          <button
+            onClick={() => debounceRef.current()}
+            disabled={!captchaVerified || submitted}
+          >
             {submitted ? "Logging in..." : "Login"}
           </button>
           <p>
             No account? <Link to="/register">Register here</Link>
           </p>
-        </form>
+        </div>
       )}
     </div>
   );
 };
 
-export default Login;
+export default Login;  
