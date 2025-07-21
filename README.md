@@ -16,16 +16,4 @@ This project is a **fully responsive Pomodoro Timer** built using **React**, des
 - **Frontend:** React (for UI and state management)    
 - **State Management:** React Hooks  
 
-## 🚀 Getting Started  
-
-In the project directory, you can run:  
-
-### `npm start`  
-Starts the app in development mode at [http://localhost:3000](http://localhost:3000).  
-
-### `npm run build`  
-Builds the app for production, optimizing performance.  
-
----
-
 This Pomodoro Timer helps users maintain productivity while offering an **immersive audio experience** for different moods. 🎶✨
